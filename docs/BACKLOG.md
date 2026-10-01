@@ -57,8 +57,9 @@ Parameter Store (`/barbearia-vaz/env-production`, SecureString).
 
 - [x] P1 Dockerfile standalone + CI (`.github/workflows/build-and-push.yml`) + compose + script de deploy
 - [x] P1b Container no ar na EC2 em `127.0.0.1:3003` (homologação: Asaas **sandbox**), limite de 320 MB
-- [ ] P1c **Vinnicius**: escolher o domínio e criar o registro A → `3.128.124.202` (DNS no registro.br)
-- [ ] P1d nginx (`deploy/nginx.conf`) + certbot para o domínio — depende de P1c
+- [x] P1c Domínio de demonstração: `demonstrativo.vinnisantos.com.br` → `3.128.124.202`
+- [x] P1d nginx + HTTPS (certbot) em https://demonstrativo.vinnisantos.com.br
+- [x] P1e Webhook cadastrado no Asaas **sandbox** para o domínio; fluxo público validado ponta a ponta (reserva → confirmação no sandbox → webhook → pago → cancelamento com estorno)
 - [ ] P6 **Decisão:** qual conta Asaas cobra em produção. A chave de produção disponível é da conta pessoal do
       Vinnicius, que já atende Life OS e PendurAi (webhooks da conta são compartilhados entre os três)
 - [ ] P7 Virada para produção: `ASAAS_BASE_URL`/chave de produção, `AMBIENTE=producao`, split, cadastro do webhook
