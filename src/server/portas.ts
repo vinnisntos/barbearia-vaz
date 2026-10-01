@@ -49,6 +49,8 @@ export interface Repositorio {
   buscarAgendamento(id: string): Promise<Agendamento | null>;
   buscarPorCobranca(id: string): Promise<Agendamento | null>;
   buscarPagoPorTelefone(telefone: string, agora: string): Promise<Agendamento[]>;
+  /** Reservas ainda dentro do lock de pagamento para este telefone. */
+  contarPendentes(telefone: string, agora: string): Promise<number>;
   criarAgendamento(dados: NovoAgendamento, agora: string): Promise<Agendamento>;
   atualizarAgendamento(id: string, dados: Partial<Agendamento>): Promise<Agendamento>;
   /**

@@ -40,7 +40,7 @@ Dono: **Codex** (backend), **Claude** (frontend), **PO** (orquestração/revisã
 - [x] R6 Transições de status atômicas (`transicionar`): cancelamento reserva o status antes do estorno; falta/cancelamento concorrentes não se sobrepõem nem geram estorno em dobro. 7 testes de regressão novos + regressão HTTP na stack real
 - [x] R7 Tempos medidos; disponibilidade com consultas em paralelo e catálogo (serviços/horários) em cache de 1 min
 - [ ] P5 Hospedar o app na mesma região do Supabase (us-east-1): cada consulta ao banco custa ~180 ms a partir do Brasil
-- [ ] I0 Limite de reservas pendentes por telefone/IP em `POST /api/agendamentos` (hoje dá para travar a agenda inteira por 10 min sem pagar)
+- [x] I0 Limite de 2 reservas pendentes por telefone em `POST /api/agendamentos` (`429 MUITAS_RESERVAS`). Não há limite por IP: quem trocar de telefone a cada reserva ainda consegue travar horários por 10 min
 - [ ] I3 Cartão: URL de retorno do checkout Asaas para `/agendamento/{id}`
 - [ ] I4 Balcão: permitir lançar atendimento fora da grade / já ocorrido (decisão de produto)
 - [x] I1 Adaptador Asaas validado no sandbox SEM split: cobrança Pix, confirmação, webhook com payload real, estorno parcial de 70%

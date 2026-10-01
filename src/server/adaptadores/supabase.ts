@@ -112,6 +112,16 @@ export class RepositorioSupabase implements Repositorio {
     verificar(error);
     return ((data ?? []) as Linha[]).map(agendamento);
   }
+  async contarPendentes(telefone: string, agora: string) {
+    const { count, error } = await this.cliente
+      .from('agendamentos')
+      .select('*', { count: 'exact', head: true })
+      .eq('telefone_cliente', telefone)
+      .eq('status', 'pendente')
+      .gt('expira_em', agora);
+    verificar(error);
+    return count ?? 0;
+  }
   async criarAgendamento(d: NovoAgendamento) {
     const { data, error } = await this.cliente.rpc('criar_agendamento', {
       p_nome: d.nomeCliente,

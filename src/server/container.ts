@@ -9,6 +9,9 @@ import { CalendarioGoogle } from './adaptadores/google';
 export type NomePorta = 'repositorio' | 'pagamentos' | 'calendario';
 export function portaFake(porta: NomePorta): boolean {
   const modo = (process.env.MODO_FAKE ?? '').trim();
+  // Com fake ligado o painel aceita o token "fake" e nenhum dinheiro é cobrado: em produção é erro de configuração.
+  if (modo && process.env.AMBIENTE === 'producao')
+    throw new Error('MODO_FAKE não pode ser usado com AMBIENTE=producao');
   if (modo === '1') return true;
   return modo
     .split(',')

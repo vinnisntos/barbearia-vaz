@@ -95,6 +95,15 @@ export class RepositorioFake implements Repositorio {
       )
       .map((a) => ({ ...a }));
   }
+  async contarPendentes(telefone: string, agora: string) {
+    return this.estado.agendamentos.filter(
+      (a) =>
+        a.telefoneCliente === telefone &&
+        a.status === 'pendente' &&
+        a.expiraEm !== null &&
+        Date.parse(a.expiraEm) > Date.parse(agora),
+    ).length;
+  }
   async criarAgendamento(dados: NovoAgendamento, agora: string) {
     for (const a of this.estado.agendamentos)
       if (a.status === 'pendente' && a.expiraEm && Date.parse(a.expiraEm) < Date.parse(agora))

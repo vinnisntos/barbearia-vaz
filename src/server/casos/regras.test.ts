@@ -63,6 +63,17 @@ describe('agenda e pagamentos', () => {
     await reservar('2026-10-02T10:00:00-03:00');
     expect(estado.agendamentos[0].status).toBe('expirado');
   });
+  it('limita reservas pendentes por telefone e libera quando o lock vence', async () => {
+    await reservar('2026-10-02T10:00:00-03:00');
+    await reservar('2026-10-02T11:00:00-03:00');
+    await expect(reservar('2026-10-02T12:00:00-03:00')).rejects.toMatchObject({
+      codigo: 'MUITAS_RESERVAS',
+      status: 429,
+    });
+    expect(estado.agendamentos).toHaveLength(2);
+    for (const a of estado.agendamentos) a.expiraEm = '2026-10-01T08:00:00Z';
+    await expect(reservar('2026-10-02T12:00:00-03:00')).resolves.toMatchObject({ valorTotal: 40 });
+  });
   it('processa webhook de forma idempotente', async () => {
     const r = await reservar();
     await pagar(r.id);

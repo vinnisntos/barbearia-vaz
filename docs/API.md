@@ -24,7 +24,8 @@ Body: `{ nome, telefone, cpf, servicosIds: [uuid], dataInicio, formaPagamento: "
 `servicosIds` deve ter exatamente 1 item (D11); mais de um → `400 DADOS_INVALIDOS` (na disponibilidade, `400 SERVICO_INVALIDO`). Vale também para o balcão.
 `201 { id, valorTotal, dataInicio, dataFim, expiraEm, pagamento }` onde `pagamento` é
 `{ forma: "PIX", qrCodeBase64, copiaECola }` ou `{ forma: "CARTAO", urlCheckout }`.
-Erros: `400 DADOS_INVALIDOS`, `409 SLOT_INDISPONIVEL`, `502 PAGAMENTO_INDISPONIVEL`
+Erros: `400 DADOS_INVALIDOS`, `409 SLOT_INDISPONIVEL`, `429 MUITAS_RESERVAS` (já há 2 reservas
+aguardando pagamento neste telefone), `502 PAGAMENTO_INDISPONIVEL`
 (se a cobrança falhar, o agendamento é marcado `expirado` para liberar o horário).
 O CPF vai apenas para o Asaas; não é persistido.
 

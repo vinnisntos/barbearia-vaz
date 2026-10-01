@@ -4,6 +4,7 @@ import { erro, ErroNegocio } from '../erros';
 import { diaLocal, isoLocal, localParaDate, partes, reais, sobrepoe } from '../tempo';
 
 const alfabeto = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+export const LIMITE_PENDENTES_POR_TELEFONE = 2;
 export function gerarPin() {
   return Array.from({ length: 4 }, () => alfabeto[randomInt(alfabeto.length)]).join('');
 }
@@ -108,6 +109,14 @@ export async function criarAgendamento(
   dados: DadosReserva & { cpf: string; formaPagamento: 'PIX' | 'CARTAO' },
 ) {
   const r = await validarReserva(portas, agora, dados);
+  // Sem isso, um único visitante travaria a agenda inteira criando reservas que nunca paga.
+  const pendentes = await portas.repositorio.contarPendentes(dados.telefone, agora().toISOString());
+  if (pendentes >= LIMITE_PENDENTES_POR_TELEFONE)
+    erro(
+      'MUITAS_RESERVAS',
+      429,
+      'Você já tem reservas aguardando pagamento. Conclua o pagamento ou aguarde 10 minutos.',
+    );
   const a = await portas.repositorio.criarAgendamento(
     {
       nomeCliente: dados.nome,
