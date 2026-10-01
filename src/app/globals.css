@@ -49,6 +49,44 @@ body {
   );
 }
 
+/* Site institucional: fundo do hero, "VAZ" em ouro e selo girando. */
+.hero {
+  background:
+    radial-gradient(60rem 32rem at 85% 0%, rgb(217 169 78 / 0.16), transparent 60%),
+    radial-gradient(40rem 26rem at 0% 100%, rgb(200 55 45 / 0.1), transparent 65%),
+    repeating-linear-gradient(135deg, rgb(245 239 230 / 0.022) 0 2px, transparent 2px 22px),
+    var(--color-fundo);
+}
+
+.hero-vaz {
+  background: linear-gradient(175deg, #f6dca0 8%, var(--color-ouro) 48%, #9b7228 96%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* a altura de linha apertada cortaria o topo das letras com o clip do fundo */
+  padding-block: 0.06em;
+}
+
+.hero-brilho {
+  background: radial-gradient(closest-side, rgb(217 169 78 / 0.2), transparent);
+}
+
+.selo-gira {
+  transform-origin: 160px 160px;
+  animation: girar 48s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+}
+
 .sem-barra-rolagem {
   scrollbar-width: none;
 }
@@ -74,7 +112,11 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .animar-surgir,
   .animate-spin,
-  .animate-pulse {
+  .animate-pulse,
+  .selo-gira {
     animation: none;
+  }
+  html {
+    scroll-behavior: auto;
   }
 }

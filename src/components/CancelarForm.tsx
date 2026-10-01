@@ -76,7 +76,7 @@ export function CancelarForm() {
             </p>
           </Cartao>
         </div>
-        <Link href="/" className={classesBotao("primario", "w-full")}>
+        <Link href="/agendar" className={classesBotao("primario", "w-full")}>
           Fazer novo agendamento
         </Link>
       </>

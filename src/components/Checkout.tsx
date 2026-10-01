@@ -140,7 +140,7 @@ export function Checkout({ id }: { id: string }) {
 
 function Recomecar({ texto = "Voltar ao início" }: { texto?: string }) {
   return (
-    <Link href="/" className={classesBotao("primario", "w-full")}>
+    <Link href="/agendar" className={classesBotao("primario", "w-full")}>
       {texto}
     </Link>
   );

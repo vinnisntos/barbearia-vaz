@@ -16,7 +16,7 @@ const oswald = Oswald({
 
 export const metadata: Metadata = {
   title: {
-    default: "Barbearia Vaz — Agende seu horário",
+    default: "Barbearia Vaz — Autoestima lá em cima",
     template: "%s · Barbearia Vaz",
   },
   description:
