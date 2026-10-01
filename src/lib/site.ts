@@ -10,7 +10,7 @@ export interface Foto {
 export const SITE = {
   nome: "MV Barbearia",
   slogan: "Tradição e estilo em cada corte",
-  barbeiro: "Maicon Rodrigues Vaz",
+  barbeiro: "Vinicius",
   whatsapp: (process.env.NEXT_PUBLIC_WHATSAPP_BARBEARIA ?? "").replace(/\D/g, ""),
 
   // Preencha quando o barbeiro passar os dados; enquanto estiverem vazios, o site não mostra o bloco.
