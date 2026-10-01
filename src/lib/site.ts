@@ -8,8 +8,8 @@ export interface Foto {
 }
 
 export const SITE = {
-  nome: "Barbearia Vaz",
-  slogan: "Autoestima lá em cima",
+  nome: "MV Barbearia",
+  slogan: "Tradição e estilo em cada corte",
   barbeiro: "Maicon Rodrigues Vaz",
   whatsapp: (process.env.NEXT_PUBLIC_WHATSAPP_BARBEARIA ?? "").replace(/\D/g, ""),
 

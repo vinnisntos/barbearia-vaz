@@ -16,11 +16,11 @@ const oswald = Oswald({
 
 export const metadata: Metadata = {
   title: {
-    default: "Barbearia Vaz — Autoestima lá em cima",
-    template: "%s · Barbearia Vaz",
+    default: "MV Barbearia — Tradição e estilo em cada corte",
+    template: "%s · MV Barbearia",
   },
   description:
-    "Escolha o serviço, o dia e o horário e garanta sua vaga na Barbearia Vaz pagando por Pix ou cartão.",
+    "Escolha o serviço, o dia e o horário e garanta sua vaga na MV Barbearia pagando por Pix ou cartão.",
 };
 
 export const viewport: Viewport = {

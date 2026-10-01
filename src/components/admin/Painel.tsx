@@ -86,7 +86,7 @@ export function Painel() {
     <ContextoAdmin value={chamar}>
       <header className="mx-auto flex w-full max-w-md items-center justify-between gap-3 px-4 pt-4">
         <p className="font-titulo text-xl uppercase tracking-widest">
-          Barbearia <span className="text-ouro">Vaz</span>
+          <span className="text-ouro">MV</span> Barbearia
         </p>
         <button
           type="button"

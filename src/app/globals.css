@@ -49,7 +49,7 @@ body {
   );
 }
 
-/* Site institucional: fundo do hero, "VAZ" em ouro e selo girando. */
+/* Site institucional: fundo do hero, "MV" em ouro e selo girando. */
 .hero {
   background:
     radial-gradient(60rem 32rem at 85% 0%, rgb(217 169 78 / 0.16), transparent 60%),
@@ -58,7 +58,7 @@ body {
     var(--color-fundo);
 }
 
-.hero-vaz {
+.hero-marca {
   background: linear-gradient(175deg, #f6dca0 8%, var(--color-ouro) 48%, #9b7228 96%);
   -webkit-background-clip: text;
   background-clip: text;

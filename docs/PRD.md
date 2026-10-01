@@ -1,4 +1,4 @@
-# Barbearia Vaz — PRD
+# MV Barbearia — PRD
 
 Agendamento self-service com pagamento antecipado (Pix/cartão via Asaas) e painel financeiro
 simples para o barbeiro. Cliente final não cria conta.

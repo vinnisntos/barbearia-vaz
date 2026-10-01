@@ -79,7 +79,7 @@ function Selo({ className = "" }: { className?: string }) {
         {/* textLength fecha a volta exata (2π·122 ≈ 766): sem isso o fim do texto atropela o começo. */}
         <text fill="currentColor" fontSize="20" className="font-titulo uppercase" style={{ fontWeight: 600 }}>
           <textPath href="#selo-volta" textLength="752" lengthAdjust="spacing">
-            BARBEARIA VAZ ✦ AUTOESTIMA LÁ EM CIMA ✦
+            {`${SITE.nome} ✦ ${SITE.slogan} ✦`}
           </textPath>
         </text>
       </g>
@@ -131,7 +131,7 @@ export function Institucional({
       <header className="sticky top-0 z-20 border-b border-borda/60 bg-fundo/85 backdrop-blur">
         <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between gap-4 px-5">
           <Link href="/" className="font-titulo text-xl font-semibold uppercase tracking-[0.18em]">
-            Barbearia <span className="text-ouro">Vaz</span>
+            <span className="text-ouro">MV</span> Barbearia
           </Link>
           <nav aria-label="Seções" className="hidden items-center gap-7 text-sm text-suave md:flex">
             <a href="#servicos" className="hover:text-texto">Serviços</a>
@@ -158,8 +158,8 @@ export function Institucional({
                 Corte · Barba · Atitude
               </p>
               <h1 className="mt-6 font-titulo font-semibold uppercase leading-[0.9] tracking-wide">
+                <span className="hero-marca block text-[clamp(5.5rem,30vw,12.5rem)]">MV</span>
                 <span className="block text-[clamp(2.75rem,13vw,5.5rem)] text-texto">Barbearia</span>
-                <span className="hero-vaz block text-[clamp(5.5rem,30vw,12.5rem)]">Vaz</span>
               </h1>
               <p className="mt-5 flex items-center gap-4 font-titulo text-2xl font-medium uppercase tracking-[0.14em] text-texto sm:text-3xl">
                 <span aria-hidden="true" className="h-px w-10 shrink-0 bg-ouro sm:w-16" />
@@ -411,7 +411,7 @@ export function Institucional({
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-5 py-8 text-sm text-suave sm:flex-row sm:items-center sm:justify-between">
           <p>
             <span className="font-titulo text-base font-semibold uppercase tracking-[0.18em] text-texto">
-              Barbearia <span className="text-ouro">Vaz</span>
+              <span className="text-ouro">MV</span> Barbearia
             </span>
             <span className="mx-2" aria-hidden="true">
               ·
