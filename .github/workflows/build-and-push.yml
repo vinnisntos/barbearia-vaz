@@ -36,6 +36,7 @@ jobs:
             ghcr.io/vinnisntos/barbearia-vaz:latest
             ghcr.io/vinnisntos/barbearia-vaz:${{ github.sha }}
           build-args: |
+            NEXT_PUBLIC_PAGAMENTO_FAKE=${{ vars.NEXT_PUBLIC_PAGAMENTO_FAKE }}
             NEXT_PUBLIC_SUPABASE_URL=${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
             NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
             NEXT_PUBLIC_WHATSAPP_BARBEARIA=${{ vars.NEXT_PUBLIC_WHATSAPP_BARBEARIA }}
