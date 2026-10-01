@@ -51,7 +51,19 @@ Dono: **Codex** (backend), **Claude** (frontend), **PO** (orquestração/revisã
 - [ ] I5 Publicar o app OAuth ("Em produção") — em modo teste o refresh token expira em 7 dias
 
 ## Sprint 3 — Deploy
-- [ ] P1 Dockerfile + compose + proxy HTTPS no EC2
+EC2 `i-0ea037e8a9c00acdf` (us-east-2, t3.micro compartilhada com outros 8 sites). Padrão: imagem buildada no
+GitHub Actions → ghcr; no servidor só `pull`. Deploy: `deploy/deploy.sh` via SSM; `.env.production` vem do
+Parameter Store (`/barbearia-vaz/env-production`, SecureString).
+
+- [x] P1 Dockerfile standalone + CI (`.github/workflows/build-and-push.yml`) + compose + script de deploy
+- [x] P1b Container no ar na EC2 em `127.0.0.1:3003` (homologação: Asaas **sandbox**), limite de 320 MB
+- [ ] P1c **Vinnicius**: escolher o domínio e criar o registro A → `3.128.124.202` (DNS no registro.br)
+- [ ] P1d nginx (`deploy/nginx.conf`) + certbot para o domínio — depende de P1c
+- [ ] P6 **Decisão:** qual conta Asaas cobra em produção. A chave de produção disponível é da conta pessoal do
+      Vinnicius, que já atende Life OS e PendurAi (webhooks da conta são compartilhados entre os três)
+- [ ] P7 Virada para produção: `ASAAS_BASE_URL`/chave de produção, `AMBIENTE=producao`, split, cadastro do webhook
 - [ ] P2 Keep-alive do Supabase free + job de limpeza de pendentes vencidos (cancela cobrança no Asaas)
 - [ ] P3 Teste em produção com Pix de R$ 5,00 (pagar, cancelar com PIN, conferir estorno de 70%)
 - [ ] P4 Política de privacidade (LGPD)
+- [ ] P5 (resolvido pelo deploy) app em us-east-2, ao lado do Supabase: disponibilidade em ~110 ms no servidor
+- [ ] P8 Antes de abrir ao público: preços/horários reais, agenda Google do barbeiro, limpar dados de teste do banco
