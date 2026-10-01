@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-titulo: var(--font-oswald), var(--font-geist-sans), system-ui, sans-serif;
+
+  --color-fundo: #12100e;
+  --color-superficie: #1c1917;
+  --color-relevo: #27221e;
+  --color-borda: #40382f;
+  --color-texto: #f5efe6;
+  --color-suave: #b9ae9f;
+  --color-ouro: #d9a94e;
+  --color-ouro-claro: #edc77c;
+  --color-verde: #4ade80;
+  --color-vermelho: #f87171;
+  --color-perigo: #b3261e;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-fundo);
+  color: var(--color-texto);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ouro-claro);
+  outline-offset: 2px;
+}
+
+/* Faixa do poste de barbeiro. */
+.faixa-barbeiro {
+  height: 6px;
+  background: repeating-linear-gradient(
+    135deg,
+    #c8372d 0 12px,
+    #f5efe6 12px 24px,
+    #2f5fa8 24px 36px,
+    #f5efe6 36px 48px
+  );
+}
+
+.sem-barra-rolagem {
+  scrollbar-width: none;
+}
+.sem-barra-rolagem::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes surgir {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animar-surgir {
+  animation: surgir 0.35s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animar-surgir,
+  .animate-spin,
+  .animate-pulse {
+    animation: none;
+  }
+}
