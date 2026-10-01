@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Geist, Oswald } from "next/font/google";
+import { SITE } from "@/lib/site";
 import "./globals.css";
 
 const geist = Geist({
@@ -16,11 +17,10 @@ const oswald = Oswald({
 
 export const metadata: Metadata = {
   title: {
-    default: "MV Barbearia — Tradição e estilo em cada corte",
-    template: "%s · MV Barbearia",
+    default: `${SITE.nome} — ${SITE.slogan}`,
+    template: `%s · ${SITE.nome}`,
   },
-  description:
-    "Escolha o serviço, o dia e o horário e garanta sua vaga na MV Barbearia pagando por Pix ou cartão.",
+  description: `Escolha o serviço, o dia e o horário e garanta sua vaga na ${SITE.nome} pagando por Pix ou cartão.`,
 };
 
 export const viewport: Viewport = {

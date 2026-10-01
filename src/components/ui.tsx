@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Marca } from "./Marca";
 import {
   useEffect,
   useId,
@@ -214,7 +215,7 @@ export function Cabecalho({ subtitulo }: { subtitulo?: string }) {
     <header className="px-4 pt-6 pb-2 text-center">
       <Link href="/" className="inline-block rounded-lg px-2 py-1">
         <span className="block font-titulo text-3xl font-semibold uppercase tracking-[0.18em] text-texto">
-          <span className="text-ouro">MV</span> Barbearia
+          <Marca />
         </span>
       </Link>
       {subtitulo && <p className="mt-1 text-sm text-suave">{subtitulo}</p>}

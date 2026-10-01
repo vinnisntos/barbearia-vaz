@@ -49,7 +49,7 @@ body {
   );
 }
 
-/* Site institucional: fundo do hero, "MV" em ouro e selo girando. */
+/* Site institucional: fundo do hero, destaque da marca em ouro e selo girando. */
 .hero {
   background:
     radial-gradient(60rem 32rem at 85% 0%, rgb(217 169 78 / 0.16), transparent 60%),

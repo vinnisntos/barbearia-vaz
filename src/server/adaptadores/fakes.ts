@@ -62,8 +62,8 @@ export function criarEstadoFake(): EstadoFake {
     ocupados: [],
   };
 }
-const memoria = globalThis as typeof globalThis & { __barbeariaVazFake?: EstadoFake };
-export const estadoFake = (): EstadoFake => (memoria.__barbeariaVazFake ??= criarEstadoFake());
+const memoria = globalThis as typeof globalThis & { __barbeariaFake?: EstadoFake };
+export const estadoFake = (): EstadoFake => (memoria.__barbeariaFake ??= criarEstadoFake());
 export class RepositorioFake implements Repositorio {
   constructor(public estado: EstadoFake) {}
   async listarServicos() {

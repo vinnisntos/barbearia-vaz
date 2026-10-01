@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { ErroApi } from "@/lib/api";
 import { entrar, ErroLogin, MODO_FAKE, obterSessao, obterToken, sair, type Sessao } from "@/lib/auth";
 import { Aviso, Botao, Cabecalho, Campo, Carregando, Pagina, Titulo } from "../ui";
+import { Marca } from "../Marca";
 import { Agenda } from "./Agenda";
 import { Balcao } from "./Balcao";
 import { ContextoAdmin, type ChamarAdmin } from "./contexto";
@@ -86,7 +87,7 @@ export function Painel() {
     <ContextoAdmin value={chamar}>
       <header className="mx-auto flex w-full max-w-md items-center justify-between gap-3 px-4 pt-4">
         <p className="font-titulo text-xl uppercase tracking-widest">
-          <span className="text-ouro">MV</span> Barbearia
+          <Marca />
         </p>
         <button
           type="button"

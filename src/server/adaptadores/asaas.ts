@@ -16,7 +16,7 @@ export class PagamentosAsaas implements Pagamentos {
       headers: {
         access_token: this.chave,
         'Content-Type': 'application/json',
-        'User-Agent': 'barbearia-vaz',
+        'User-Agent': 'barbearia',
       },
       body: corpo ? JSON.stringify(corpo) : undefined,
     });
