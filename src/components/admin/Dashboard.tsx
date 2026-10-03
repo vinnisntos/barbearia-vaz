@@ -53,7 +53,7 @@ export function Dashboard() {
                 </dd>
               </div>
             </div>
-            <div className="rounded-2xl border-2 border-amarelo bg-superficie p-4">
+            <div className="vidro rounded-2xl border-2 border-amarelo p-4">
               <dt className="text-sm text-suave">Lucro líquido</dt>
               <dd
                 className={`mt-1 font-titulo text-4xl break-words ${
@@ -67,11 +67,11 @@ export function Dashboard() {
               </p>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-2xl border border-borda bg-superficie p-4">
+              <div className="vidro rounded-2xl p-4">
                 <dt className="text-sm text-suave">Agendamentos</dt>
                 <dd className="mt-1 text-2xl font-semibold">{dados.totalAgendamentos}</dd>
               </div>
-              <div className="rounded-2xl border border-borda bg-superficie p-4">
+              <div className="vidro rounded-2xl p-4">
                 <dt className="text-sm text-suave">Faltas</dt>
                 <dd className="mt-1 text-2xl font-semibold">{dados.totalAusentes}</dd>
               </div>

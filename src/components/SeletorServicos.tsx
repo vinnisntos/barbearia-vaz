@@ -3,7 +3,6 @@
 import { useId } from "react";
 import type { Servico } from "@/lib/api";
 import { formatarDuracao, formatarReais, paraCentavos } from "@/lib/formato";
-import { SITE } from "@/lib/site";
 
 export function somarServicos(servicos: Servico[], ids: string[]) {
   const escolhidos = servicos.filter((s) => ids.includes(s.id));
@@ -33,7 +32,7 @@ export function SeletorServicos({
       <ul className="flex flex-col gap-3">
         {servicos.map((servico) => (
           <li key={servico.id}>
-            <label className="flex min-h-16 cursor-pointer items-center gap-3 rounded-2xl border border-borda bg-superficie px-4 py-3 transition-colors has-checked:border-amarelo has-checked:bg-relevo has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-amarelo-claro">
+            <label className="flex min-h-16 cursor-pointer items-center gap-3 vidro rounded-2xl px-4 py-3 transition-colors has-checked:border-amarelo has-checked:bg-relevo has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-amarelo-claro">
               <input
                 type="radio"
                 name={grupo}
@@ -62,7 +61,7 @@ export function SeletorServicos({
                 </span>
               </span>
               <span className="shrink-0 font-semibold text-amarelo-claro">
-                {SITE.cobraPagamento ? formatarReais(servico.preco) : "Gratuito"}
+                {servico.preco === 0 ? "Gratuito" : formatarReais(servico.preco)}
               </span>
             </label>
           </li>

@@ -15,6 +15,11 @@
   --color-verde: #4ade80;
   --color-vermelho: #f87171;
   --color-perigo: #b3261e;
+
+  /* Vidro: preenchimento e filete das superfícies translúcidas; borda-campo dá 3:1 nos controles. */
+  --color-vidro: rgb(24 52 104 / 0.42);
+  --color-vidro-borda: rgb(170 195 240 / 0.2);
+  --color-borda-campo: #6a80ab;
 }
 
 :root {
@@ -30,6 +35,92 @@ body {
   color: var(--color-texto);
   font-family: var(--font-sans);
   overflow-x: hidden;
+}
+
+/* Luz ambiente atrás de tudo: sem ela o vidro não tem o que deixar passar. Fica fixa (pseudo-elemento,
+   não background-attachment) para não repintar a página inteira a cada rolagem no celular. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(46rem 32rem at 92% -8%, rgb(246 181 30 / 0.1), transparent 62%),
+    radial-gradient(48rem 40rem at -12% 30%, rgb(46 104 214 / 0.3), transparent 62%),
+    radial-gradient(42rem 36rem at 108% 88%, rgb(40 96 206 / 0.24), transparent 60%);
+}
+
+@layer components {
+  /* Vidro comum: translúcido, com filete e brilho no topo, SEM blur — barato o bastante para
+     cartões e itens repetidos em lista. */
+  .vidro {
+    border: 1px solid var(--color-vidro-borda);
+    background:
+      linear-gradient(160deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.015) 45%), var(--color-vidro);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.1),
+      0 10px 28px rgb(0 4 18 / 0.26);
+  }
+
+  /* Faixa de seção de largura total: só um véu claro, sem sombra. */
+  .vidro-faixa {
+    border-color: var(--color-vidro-borda);
+    background: rgb(255 255 255 / 0.035);
+  }
+
+  /* Campos de formulário: mais opacos e com borda de 3:1, para o valor digitado ler bem. */
+  .vidro-campo {
+    border: 1px solid var(--color-borda-campo);
+    background: rgb(6 17 39 / 0.6);
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.3);
+  }
+
+  /* Diálogos e confirmações: quase sólido, a ação crítica não disputa com o fundo. */
+  .vidro-forte {
+    border: 1px solid var(--color-vidro-borda);
+    background:
+      linear-gradient(160deg, rgb(255 255 255 / 0.07), transparent 45%), rgb(11 27 58 / 0.94);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.12),
+      0 24px 60px rgb(0 4 18 / 0.5);
+  }
+
+  /* Barras fixas: o único vidro com blur de verdade (uma camada por tela). Sem suporte a
+     backdrop-filter, fica o fundo sólido. */
+  .vidro-barra {
+    border-color: var(--color-vidro-borda);
+    background: #071530;
+  }
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    .vidro-barra {
+      background: rgb(7 21 48 / 0.7);
+      -webkit-backdrop-filter: blur(14px) saturate(150%);
+      backdrop-filter: blur(14px) saturate(150%);
+    }
+  }
+}
+
+/* Quem pede menos transparência ou mais contraste recebe as superfícies sólidas de antes. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+  body::before {
+    display: none;
+  }
+  .vidro,
+  .vidro-forte {
+    border-color: var(--color-borda-campo);
+    background: var(--color-superficie);
+    box-shadow: none;
+  }
+  .vidro-faixa,
+  .vidro-campo {
+    background: var(--color-superficie);
+  }
+  .vidro-barra {
+    background: var(--color-fundo);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
 
 :focus-visible {
@@ -48,8 +139,7 @@ body {
   background:
     radial-gradient(60rem 32rem at 85% 0%, rgb(246 181 30 / 0.13), transparent 60%),
     radial-gradient(44rem 28rem at 0% 100%, rgb(46 104 214 / 0.22), transparent 65%),
-    repeating-linear-gradient(135deg, rgb(243 246 252 / 0.022) 0 2px, transparent 2px 22px),
-    var(--color-fundo);
+    repeating-linear-gradient(135deg, rgb(243 246 252 / 0.022) 0 2px, transparent 2px 22px);
 }
 
 .hero-marca {

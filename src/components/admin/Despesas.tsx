@@ -100,7 +100,7 @@ export function Despesas() {
       <form
         onSubmit={adicionar}
         noValidate
-        className="flex flex-col gap-3 rounded-2xl border border-borda bg-superficie p-4"
+        className="vidro flex flex-col gap-3 rounded-2xl p-4"
       >
         <h2 className="font-semibold">Adicionar despesa</h2>
         <Campo
@@ -112,7 +112,6 @@ export function Despesas() {
           onChange={(e) => setDescricao(e.target.value)}
           erro={validar ? erros.descricao : null}
           maxLength={120}
-          className="bg-fundo"
           required
         />
         <Campo
@@ -124,7 +123,6 @@ export function Despesas() {
           value={centavos > 0 ? formatarCentavos(centavos) : ""}
           onChange={(e) => setCentavos(centavosDigitados(e.target.value))}
           erro={validar ? erros.valor : null}
-          className="bg-fundo"
           required
         />
         {erro && <Aviso tipo="erro">{erro}</Aviso>}
@@ -158,7 +156,7 @@ export function Despesas() {
               {lista.map((d) => (
                 <li
                   key={d.id}
-                  className="flex items-center gap-3 rounded-xl border border-borda bg-superficie py-2 pr-2 pl-4"
+                  className="vidro flex items-center gap-3 rounded-xl py-2 pr-2 pl-4"
                 >
                   <div className="min-w-0 flex-1">
                     <p className="font-medium break-words">{d.descricao}</p>

@@ -20,7 +20,7 @@ const base =
 
 const variantes: Record<Variante, string> = {
   primario: "bg-amarelo text-fundo hover:bg-amarelo-claro",
-  secundario: "border border-borda bg-relevo text-texto hover:border-amarelo",
+  secundario: "vidro text-texto hover:border-amarelo",
   perigo: "bg-perigo text-white hover:bg-[#c9342b]",
   fantasma: "text-amarelo-claro underline-offset-4 hover:underline",
 };
@@ -80,7 +80,7 @@ type TipoAviso = "erro" | "alerta" | "info" | "sucesso";
 const coresAviso: Record<TipoAviso, string> = {
   erro: "border-vermelho/60 bg-vermelho/10 text-texto",
   alerta: "border-amarelo/60 bg-amarelo/10 text-texto",
-  info: "border-borda bg-relevo text-suave",
+  info: "vidro text-suave",
   sucesso: "border-verde/60 bg-verde/10 text-texto",
 };
 
@@ -152,8 +152,8 @@ export function Campo({ rotulo, erro, ajuda, className = "", ...resto }: CampoPr
         id={id}
         aria-invalid={erro ? true : undefined}
         aria-describedby={descritoPor || undefined}
-        className={`min-h-12 w-full rounded-xl border bg-superficie px-4 text-base text-texto placeholder:text-suave/60 ${
-          erro ? "border-vermelho" : "border-borda"
+        className={`vidro-campo min-h-12 w-full rounded-xl px-4 text-base text-texto placeholder:text-suave/75 ${
+          erro ? "border-vermelho" : ""
         } ${className}`}
         {...resto}
       />
@@ -201,7 +201,7 @@ export function Modal({
         evento.preventDefault();
         aoFechar();
       }}
-      className="m-auto w-[calc(100vw-2rem)] max-w-sm rounded-2xl border border-borda bg-superficie p-5 text-texto backdrop:bg-black/75"
+      className="vidro-forte m-auto w-[calc(100vw-2rem)] max-w-sm rounded-2xl p-5 text-texto backdrop:bg-black/65 backdrop:backdrop-blur-[3px]"
     >
       <h2 id={idTitulo} className="font-titulo text-xl uppercase tracking-wide">
         {titulo}
@@ -260,7 +260,7 @@ export function Cartao({
   className?: string;
 }) {
   return (
-    <div className={`rounded-2xl border border-borda bg-superficie p-4 ${className}`}>
+    <div className={`vidro rounded-2xl p-4 ${className}`}>
       {children}
     </div>
   );

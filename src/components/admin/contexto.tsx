@@ -30,7 +30,7 @@ export function NavegadorPeriodo({
   children?: React.ReactNode;
 }) {
   const classeSeta =
-    "flex size-12 shrink-0 items-center justify-center rounded-xl border border-borda bg-superficie text-xl hover:border-amarelo";
+    "flex size-12 shrink-0 items-center justify-center vidro rounded-xl text-xl hover:border-amarelo";
   return (
     <div className="flex items-center gap-2">
       <button type="button" className={classeSeta} aria-label={nomeAnterior} onClick={aoAnterior}>

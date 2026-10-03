@@ -135,7 +135,7 @@ export function Agenda({
         ) : (
           <ul className="flex flex-col gap-3">
             {lista.map((a) => (
-              <li key={a.id} className="rounded-2xl border border-borda bg-superficie p-4">
+              <li key={a.id} className="vidro rounded-2xl p-4">
                 <div className="flex items-start justify-between gap-3">
                   <p className="font-titulo text-2xl tabular-nums">
                     {formatarHora(a.dataInicio)}

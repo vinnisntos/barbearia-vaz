@@ -23,7 +23,6 @@ import { Aviso, Botao, Carregando, Cartao, classesBotao, Titulo } from "./ui";
 
 const INTERVALO_POLLING_MS = 3000;
 const INTERVALO_POLLING_EXPIRADO_MS = 15000;
-const WHATSAPP = (process.env.NEXT_PUBLIC_WHATSAPP_BARBEARIA ?? "").replace(/\D/g, "");
 
 const semAssinatura = () => () => {};
 
@@ -448,9 +447,9 @@ function Sucesso({ agendamento }: { agendamento: Agendamento }) {
         </div>
       )}
 
-      {WHATSAPP && (
+      {SITE.whatsapp && (
         <a
-          href={`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(mensagem)}`}
+          href={`https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(mensagem)}`}
           target="_blank"
           rel="noopener noreferrer"
           className={classesBotao("primario", "w-full bg-verde hover:bg-[#6ee7a0]")}

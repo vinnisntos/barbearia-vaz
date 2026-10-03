@@ -21,7 +21,7 @@ export interface HorarioDia {
 const botao =
   "inline-flex min-h-13 items-center justify-center gap-2 rounded-xl px-7 text-base font-semibold transition-colors";
 const botaoOuro = `${botao} bg-amarelo text-fundo hover:bg-amarelo-claro`;
-const botaoLinha = `${botao} border border-borda bg-fundo/40 text-texto backdrop-blur hover:border-amarelo`;
+const botaoLinha = `${botao} vidro text-texto hover:border-amarelo`;
 
 const DIAS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
@@ -124,7 +124,7 @@ export function Institucional({
   return (
     <>
       {/* Barra fixa: a marca e o botão de agendar sempre à mão. */}
-      <header className="sticky top-0 z-20 border-b border-borda/60 bg-fundo/85 backdrop-blur">
+      <header className="vidro-barra sticky top-0 z-20 border-b">
         <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between gap-4 px-5">
           <Link
             href="/"
@@ -153,7 +153,7 @@ export function Institucional({
         <section className="hero relative isolate overflow-hidden">
           <div className="mx-auto grid w-full max-w-5xl items-center gap-10 px-5 pt-14 pb-20 sm:pt-20 sm:pb-28 md:grid-cols-[1.25fr_1fr]">
             <div>
-              <p className="inline-flex items-center gap-2 rounded-full border border-borda bg-fundo/50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-amarelo-claro backdrop-blur">
+              <p className="vidro inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-amarelo-claro">
                 <span aria-hidden="true" className="size-1.5 rounded-full bg-amarelo" />
                 Óculos · Lentes · Hora marcada
               </p>
@@ -203,8 +203,8 @@ export function Institucional({
         </section>
 
         {/* DIFERENCIAIS */}
-        <section aria-label="Por que agendar pelo site" className="border-b border-borda bg-superficie">
-          <ul className="mx-auto grid w-full max-w-5xl gap-px bg-borda sm:grid-cols-3">
+        <section aria-label="Por que agendar pelo site" className="vidro-faixa border-y">
+          <ul className="mx-auto grid w-full max-w-5xl divide-y divide-vidro-borda sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {[
               ["Sem cadastro", "Nada de criar conta nem senha para lembrar."],
               [
@@ -220,7 +220,7 @@ export function Institucional({
                   : "Escolheu o horário, a confirmação aparece na tela.",
               ],
             ].map(([titulo, texto]) => (
-              <li key={titulo} className="bg-superficie px-5 py-7">
+              <li key={titulo} className="px-5 py-7">
                 <p className="font-titulo text-xl font-semibold uppercase tracking-wide text-amarelo-claro">
                   {titulo}
                 </p>
@@ -245,14 +245,14 @@ export function Institucional({
               {servicos.map((servico) => (
                 <li
                   key={servico.id}
-                  className="group flex flex-col rounded-2xl border border-borda bg-superficie p-6 transition-colors hover:border-amarelo"
+                  className="vidro group flex flex-col rounded-2xl p-6 transition-colors hover:border-amarelo"
                 >
                   <h3 className="font-titulo text-2xl font-semibold uppercase tracking-wide">
                     {servico.nome}
                   </h3>
                   <p className="mt-1 text-sm text-suave">{formatarDuracao(servico.duracaoMinutos)}</p>
                   <p className="mt-6 font-titulo text-4xl font-semibold text-amarelo-claro">
-                    {SITE.cobraPagamento ? formatarReais(servico.preco) : "Gratuito"}
+                    {servico.preco === 0 ? "Gratuito" : formatarReais(servico.preco)}
                   </p>
                   <Link
                     href="/agendar"
@@ -268,7 +268,7 @@ export function Institucional({
         </Secao>
 
         {/* COMO FUNCIONA */}
-        <div className="border-y border-borda bg-superficie">
+        <div className="vidro-faixa border-y">
           <Secao id="como-funciona" rotulo="Como funciona" titulo="Três passos e pronto">
             <ol className="grid gap-8 sm:grid-cols-3">
               {[
@@ -295,7 +295,7 @@ export function Institucional({
                 </li>
               ))}
             </ol>
-            <p className="mt-10 rounded-2xl border border-borda bg-fundo px-5 py-4 text-sm leading-relaxed text-suave">
+            <p className="vidro mt-10 rounded-2xl px-5 py-4 text-sm leading-relaxed text-suave">
               <strong className="text-texto">Imprevisto?</strong>{" "}
               {SITE.clienteCancela ? (
                 <>
@@ -332,7 +332,7 @@ export function Institucional({
                   </p>
                   <ul className="mt-6 grid gap-3 sm:grid-cols-2">
                     {SITE.responsavel.destaques.map((item) => (
-                      <li key={item.rotulo} className="rounded-2xl border border-borda bg-superficie px-5 py-4">
+                      <li key={item.rotulo} className="vidro rounded-2xl px-5 py-4">
                         <span className="block font-titulo text-2xl font-extrabold text-amarelo">
                           {item.valor}
                         </span>
@@ -368,7 +368,7 @@ export function Institucional({
 
         {/* GALERIA: só aparece quando houver fotos reais em src/lib/site.ts */}
         {temGaleria && (
-          <div className="border-t border-borda bg-superficie">
+          <div className="vidro-faixa border-t">
             <Secao id="galeria" rotulo="Galeria" titulo="Nosso espaço">
               <ul className="grid grid-cols-2 gap-3 md:grid-cols-3">
                 {SITE.galeria.map((foto) => (
@@ -388,7 +388,7 @@ export function Institucional({
         )}
 
         {/* HORÁRIOS E CONTATO */}
-        <div className="border-t border-borda bg-superficie">
+        <div className="vidro-faixa border-t">
           <Secao id="contato" rotulo="Horários e contato" titulo="Passa lá">
             <div className="grid gap-10 md:grid-cols-2">
               <div>

@@ -184,7 +184,7 @@ export function Vitrine() {
             />
           )}
 
-          <div className="sticky bottom-0 -mx-4 mt-auto border-t border-borda bg-fundo/95 px-4 py-3 backdrop-blur">
+          <div className="vidro-barra sticky bottom-0 -mx-4 mt-auto border-t px-4 py-3">
             <p
               aria-live="polite"
               className="mb-2 flex items-baseline justify-between gap-2"
@@ -244,7 +244,7 @@ export function Vitrine() {
             />
           )}
 
-          <div className="sticky bottom-0 -mx-4 mt-auto flex gap-3 border-t border-borda bg-fundo/95 px-4 py-3 backdrop-blur">
+          <div className="vidro-barra sticky bottom-0 -mx-4 mt-auto flex gap-3 border-t px-4 py-3">
             <Botao variante="secundario" onClick={() => irPara("servicos")}>
               Voltar
             </Botao>
@@ -347,7 +347,7 @@ export function Vitrine() {
                   ).map((opcao) => (
                     <label
                       key={opcao.valor}
-                      className="flex min-h-16 cursor-pointer flex-col justify-center rounded-xl border border-borda bg-superficie px-4 py-2 has-checked:border-amarelo has-checked:bg-relevo has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-amarelo-claro"
+                      className="flex min-h-16 cursor-pointer flex-col justify-center vidro rounded-xl px-4 py-2 has-checked:border-amarelo has-checked:bg-relevo has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-amarelo-claro"
                     >
                       <input
                         type="radio"
@@ -369,7 +369,9 @@ export function Vitrine() {
 
             <p className="text-sm leading-relaxed text-suave">
               {COBRA
-                ? "O horário fica reservado por 10 minutos enquanto você paga. Cancelamento até 1 hora antes, com estorno de 70% do valor."
+                ? SITE.clienteCancela
+                  ? "O horário fica reservado por 10 minutos enquanto você paga. Cancelamento até 1 hora antes, com estorno de 70% do valor."
+                  : "O horário fica reservado por 10 minutos enquanto você paga."
                 : SITE.clienteCancela
                   ? "Agendar não tem custo. Se não puder vir, cancele pelo site até 1 hora antes para liberar o horário."
                   : "Agendar não tem custo. Se não puder vir, avise a gente com antecedência."}

@@ -102,9 +102,9 @@ export function Painel() {
 
       <nav
         aria-label="Seções do painel"
-        className="sticky top-0 z-10 mx-auto w-full max-w-md bg-fundo/95 px-4 py-3 backdrop-blur"
+        className="vidro-barra sticky top-0 z-10 mx-auto w-full max-w-md px-4 py-3"
       >
-        <ul className="grid grid-cols-4 gap-1 rounded-xl border border-borda bg-superficie p-1">
+        <ul className="vidro grid grid-cols-4 gap-1 rounded-xl p-1">
           {ABAS.map((item) => (
             <li key={item.id}>
               <button
