@@ -10,6 +10,7 @@ import {
   somarDias,
 } from "@/lib/formato";
 import { useHoje, useRecurso } from "@/lib/hooks";
+import { SITE } from "@/lib/site";
 import { mascararTelefone, soDigitos, telefoneValido } from "@/lib/validacao";
 import { SeletorHorario } from "../SeletorHorario";
 import { SeletorServicos, somarServicos } from "../SeletorServicos";
@@ -84,7 +85,9 @@ export function Balcao({ aoCriar }: { aoCriar: (dia: string, aviso: string) => v
       <div>
         <Titulo>Novo agendamento</Titulo>
         <p className="mt-1 text-suave">
-          Atendimento de balcão: entra como pago, sem cobrança pelo app.
+          {SITE.cobraPagamento
+            ? "Atendimento de balcão: entra como pago, sem cobrança pelo app."
+            : "Agendamento feito pela loja: já entra confirmado na agenda."}
         </p>
       </div>
 
@@ -156,7 +159,9 @@ export function Balcao({ aoCriar }: { aoCriar: (dia: string, aviso: string) => v
               ? "Nenhum serviço escolhido"
               : `${escolhidos[0].nome} · ${formatarDuracao(minutos)}`}
           </span>
-          <span className="text-xl font-semibold text-amarelo-claro">{formatarCentavos(centavos)}</span>
+          {SITE.cobraPagamento && (
+            <span className="text-xl font-semibold text-amarelo-claro">{formatarCentavos(centavos)}</span>
+          )}
         </p>
 
         {erro && <Aviso tipo="erro">{erro}</Aviso>}

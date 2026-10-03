@@ -4,13 +4,17 @@ import { useState } from "react";
 import { api, paraErroApi, type AgendamentoAdmin, type StatusAgendamento } from "@/lib/api";
 import { formatarDiaLongo, formatarHora, formatarReais, somarDias } from "@/lib/formato";
 import { useAgora, useHoje, useRecurso } from "@/lib/hooks";
+import { SITE } from "@/lib/site";
 import { mascararTelefone, soDigitos } from "@/lib/validacao";
 import { Aviso, Botao, Carregando, ErroComRetentativa, Modal, Titulo } from "../ui";
 import { NavegadorPeriodo, useChamarAdmin } from "./contexto";
 
+// Sem cobrança não há valores, estorno nem "pago": o agendamento só está confirmado ou não.
+const COBRA = SITE.cobraPagamento;
+
 const NOME_STATUS: Record<StatusAgendamento, string> = {
   pendente: "Aguardando pagamento",
-  pago: "Pago",
+  pago: COBRA ? "Pago" : "Confirmado",
   cancelado: "Cancelado",
   ausente: "Faltou",
   expirado: "Expirado",
@@ -150,10 +154,12 @@ export function Agenda({
                 <p className="mt-1 font-semibold break-words">{a.nomeCliente}</p>
                 <p className="text-sm break-words text-suave">{a.servicosResumo}</p>
                 <p className="mt-1 flex flex-wrap items-center gap-x-3 text-sm">
-                  <span className="font-semibold text-amarelo-claro">
-                    {formatarReais(a.valorTotal)}
-                  </span>
-                  <span className="text-suave">{a.origem === "balcao" ? "Balcão" : "Pelo app"}</span>
+                  {COBRA && (
+                    <span className="font-semibold text-amarelo-claro">
+                      {formatarReais(a.valorTotal)}
+                    </span>
+                  )}
+                  <span className="text-suave">{a.origem === "balcao" ? "Pela loja" : "Pelo site"}</span>
                   {a.telefoneCliente && (
                     <a
                       href={`https://wa.me/55${soDigitos(a.telefoneCliente)}`}
@@ -181,7 +187,7 @@ export function Agenda({
                       className="px-2 text-sm"
                       onClick={() => abrir({ tipo: "estornar", agendamento: a })}
                     >
-                      Cancelar e estornar
+                      {COBRA ? "Cancelar e estornar" : "Cancelar"}
                     </Botao>
                   </div>
                 )}
@@ -193,7 +199,7 @@ export function Agenda({
 
       {acao && (
         <Modal
-          titulo={acao.tipo === "faltou" ? "Marcar falta?" : "Cancelar e estornar?"}
+          titulo={acao.tipo === "faltou" ? "Marcar falta?" : COBRA ? "Cancelar e estornar?" : "Cancelar agendamento?"}
           aoFechar={() => !executando && setAcao(null)}
         >
           <p className="leading-relaxed text-suave">
@@ -201,7 +207,11 @@ export function Agenda({
             {formatarHora(acao.agendamento.dataInicio)} · {acao.agendamento.servicosResumo}
           </p>
           <p className="leading-relaxed">
-            {acao.tipo === "faltou"
+            {!COBRA
+              ? acao.tipo === "faltou"
+                ? "O cliente não veio. O agendamento fica registrado como falta."
+                : "O horário é liberado para outro cliente. Não dá para desfazer."
+              : acao.tipo === "faltou"
               ? `O cliente não veio. O valor de ${formatarReais(acao.agendamento.valorTotal)} fica retido, sem estorno.`
               : acao.agendamento.origem === "app"
                 ? `O cliente recebe de volta 100% (${formatarReais(acao.agendamento.valorTotal)}) e o horário é liberado. Não dá para desfazer.`
@@ -214,7 +224,7 @@ export function Agenda({
               ocupado={executando}
               onClick={confirmar}
             >
-              {acao.tipo === "faltou" ? "Confirmar falta" : "Cancelar e estornar"}
+              {acao.tipo === "faltou" ? "Confirmar falta" : COBRA ? "Cancelar e estornar" : "Cancelar agendamento"}
             </Botao>
             <Botao variante="secundario" disabled={executando} onClick={() => setAcao(null)}>
               Voltar

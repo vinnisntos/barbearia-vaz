@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { ErroApi } from "@/lib/api";
 import { entrar, ErroLogin, MODO_FAKE, obterSessao, obterToken, sair, type Sessao } from "@/lib/auth";
+import { SITE } from "@/lib/site";
 import { Aviso, Botao, Cabecalho, Campo, Carregando, Pagina, Titulo } from "../ui";
 import { Simbolo } from "../Logo";
 import { Marca } from "../Marca";
@@ -14,12 +15,14 @@ import { Despesas } from "./Despesas";
 
 type Aba = "agenda" | "balcao" | "despesas" | "dashboard";
 
-const ABAS: { id: Aba; nome: string }[] = [
+const TODAS_AS_ABAS: { id: Aba; nome: string }[] = [
   { id: "agenda", nome: "Agenda" },
   { id: "balcao", nome: "Novo" },
   { id: "despesas", nome: "Despesas" },
   { id: "dashboard", nome: "Mês" },
 ];
+// Sem cobrança o painel é só agenda: o controle de despesas (e o lucro do mês) sai de cena.
+const ABAS = SITE.cobraPagamento ? TODAS_AS_ABAS : TODAS_AS_ABAS.filter((aba) => aba.id !== "despesas");
 
 export function Painel() {
   // undefined = ainda verificando a sessão guardada.
@@ -104,7 +107,7 @@ export function Painel() {
         aria-label="Seções do painel"
         className="vidro-barra sticky top-0 z-10 mx-auto w-full max-w-md px-4 py-3"
       >
-        <ul className="vidro grid grid-cols-4 gap-1 rounded-xl p-1">
+        <ul className={`vidro grid gap-1 rounded-xl p-1 ${ABAS.length === 4 ? "grid-cols-4" : "grid-cols-3"}`}>
           {ABAS.map((item) => (
             <li key={item.id}>
               <button
@@ -138,7 +141,7 @@ export function Painel() {
             }}
           />
         )}
-        {aba === "despesas" && <Despesas />}
+        {aba === "despesas" && SITE.cobraPagamento && <Despesas />}
         {aba === "dashboard" && <Dashboard />}
       </Pagina>
     </ContextoAdmin>

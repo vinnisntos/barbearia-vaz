@@ -4,6 +4,7 @@ import { useState } from "react";
 import { api } from "@/lib/api";
 import { formatarMes, formatarReais, somarMeses } from "@/lib/formato";
 import { useHoje, useRecurso } from "@/lib/hooks";
+import { SITE } from "@/lib/site";
 import { Carregando, ErroComRetentativa, Titulo } from "../ui";
 import { NavegadorPeriodo, useChamarAdmin } from "./contexto";
 
@@ -39,6 +40,8 @@ export function Dashboard() {
           <Carregando texto="Calculando…" />
         ) : (
           <dl className="flex flex-col gap-3">
+            {SITE.cobraPagamento && (
+            <>
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-2xl border border-verde/40 bg-verde/10 p-4">
                 <dt className="text-sm text-suave">Entrou</dt>
@@ -66,6 +69,8 @@ export function Dashboard() {
                 Entradas já descontam tarifas e estornos.
               </p>
             </div>
+            </>
+            )}
             <div className="grid grid-cols-2 gap-3">
               <div className="vidro rounded-2xl p-4">
                 <dt className="text-sm text-suave">Agendamentos</dt>
