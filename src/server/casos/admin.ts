@@ -57,8 +57,10 @@ export async function cancelarAdmin(portas: Portas, agora: Relogio, id: string) 
   const a = await portas.repositorio.buscarAgendamento(id);
   if (!a) throw new ErroNegocio('NAO_ENCONTRADO', 404, 'Agendamento não encontrado.');
   if (a.status !== 'pago') erro('STATUS_INVALIDO', 409, 'O agendamento não está pago.');
-  const valor = a.origem === 'app' ? a.valorTotalCentavos : 0;
-  if (a.origem === 'app' && !a.asaasCobrancaId)
+  // Balcão e agendamento sem custo não têm cobrança: só cancelam.
+  const cobrado = a.origem === 'app' && a.valorTotalCentavos > 0;
+  const valor = cobrado ? a.valorTotalCentavos : 0;
+  if (cobrado && !a.asaasCobrancaId)
     erro('ESTORNO_INDISPONIVEL', 502, 'Estorno indisponível no momento.');
   // Mesma reserva atômica do cancelamento do cliente (ver cancelarCliente).
   const reservado = await portas.repositorio.transicionar(id, ['pago'], {
@@ -67,7 +69,7 @@ export async function cancelarAdmin(portas: Portas, agora: Relogio, id: string) 
     canceladoEm: agora().toISOString(),
   });
   if (!reservado) erro('STATUS_INVALIDO', 409, 'O agendamento não está pago.');
-  if (a.origem === 'app') {
+  if (cobrado) {
     try {
       await portas.pagamentos.estornar(
         a.asaasCobrancaId!,

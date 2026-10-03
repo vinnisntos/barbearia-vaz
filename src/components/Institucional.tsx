@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { formatarDuracao, formatarReais } from "@/lib/formato";
-import { linkWhatsapp, partesDoNome, SITE } from "@/lib/site";
+import { linkWhatsapp, SITE } from "@/lib/site";
+import { Simbolo, TracosSimbolo } from "./Logo";
 import { Marca } from "./Marca";
 
 export interface ServicoVitrine {
@@ -19,8 +20,8 @@ export interface HorarioDia {
 
 const botao =
   "inline-flex min-h-13 items-center justify-center gap-2 rounded-xl px-7 text-base font-semibold transition-colors";
-const botaoOuro = `${botao} bg-ouro text-fundo hover:bg-ouro-claro`;
-const botaoLinha = `${botao} border border-borda bg-fundo/40 text-texto backdrop-blur hover:border-ouro`;
+const botaoOuro = `${botao} bg-amarelo text-fundo hover:bg-amarelo-claro`;
+const botaoLinha = `${botao} border border-borda bg-fundo/40 text-texto backdrop-blur hover:border-amarelo`;
 
 const DIAS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
@@ -55,7 +56,7 @@ function Secao({
 }) {
   return (
     <section id={id} aria-labelledby={`${id}-titulo`} className="mx-auto w-full max-w-5xl px-5 py-16 sm:py-24">
-      <p className="text-sm font-semibold uppercase tracking-[0.3em] text-ouro">{rotulo}</p>
+      <p className="text-sm font-semibold uppercase tracking-[0.3em] text-amarelo">{rotulo}</p>
       <h2
         id={`${id}-titulo`}
         className="mt-2 font-titulo text-4xl font-semibold uppercase leading-none tracking-wide sm:text-5xl"
@@ -67,7 +68,7 @@ function Secao({
   );
 }
 
-/** Selo circular com o nome girando em volta e tesoura ao centro. */
+/** Selo circular com o nome girando em volta e o símbolo da marca ao centro. */
 function Selo({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 320 320" className={className} role="img" aria-label={`Selo da ${SITE.nome}`}>
@@ -78,20 +79,15 @@ function Selo({ className = "" }: { className?: string }) {
       <circle cx="160" cy="160" r="98" fill="none" stroke="currentColor" strokeWidth="1.5" opacity="0.5" />
       <g className="selo-gira">
         {/* textLength fecha a volta exata (2π·122 ≈ 766): sem isso o fim do texto atropela o começo. */}
-        <text fill="currentColor" fontSize="20" className="font-titulo uppercase" style={{ fontWeight: 600 }}>
+        <text fill="currentColor" fontSize="17" className="font-titulo uppercase" style={{ fontWeight: 700 }}>
           <textPath href="#selo-volta" textLength="752" lengthAdjust="spacing">
             {`${SITE.nome} ✦ ${SITE.slogan} ✦`}
           </textPath>
         </text>
       </g>
-      {/* tesoura */}
-      <g fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="128" cy="206" r="17" />
-        <circle cx="192" cy="206" r="17" />
-        <path d="M139 192 L194 104" />
-        <path d="M181 192 L126 104" />
+      <g transform="translate(92 86) scale(2.2)">
+        <TracosSimbolo />
       </g>
-      <circle cx="160" cy="158" r="4.5" fill="currentColor" />
     </svg>
   );
 }
@@ -123,7 +119,6 @@ export function Institucional({
 }) {
   const whatsapp = linkWhatsapp(`Olá! Vim pelo site da ${SITE.nome}.`);
   const grupos = agruparHorarios(horarios);
-  const [primeiroNome] = SITE.barbeiro.split(" ");
   const temGaleria = SITE.galeria.length >= 3;
 
   return (
@@ -131,18 +126,22 @@ export function Institucional({
       {/* Barra fixa: a marca e o botão de agendar sempre à mão. */}
       <header className="sticky top-0 z-20 border-b border-borda/60 bg-fundo/85 backdrop-blur">
         <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between gap-4 px-5">
-          <Link href="/" className="font-titulo text-xl font-semibold uppercase tracking-[0.18em]">
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-titulo text-lg font-extrabold uppercase tracking-[0.06em]"
+          >
+            <Simbolo className="size-8 shrink-0 text-amarelo" />
             <Marca />
           </Link>
           <nav aria-label="Seções" className="hidden items-center gap-7 text-sm text-suave md:flex">
             <a href="#servicos" className="hover:text-texto">Serviços</a>
             <a href="#como-funciona" className="hover:text-texto">Como funciona</a>
-            <a href="#barbeiro" className="hover:text-texto">O barbeiro</a>
+            <a href="#sobre" className="hover:text-texto">A ótica</a>
             <a href="#contato" className="hover:text-texto">Horários</a>
           </nav>
           <Link
             href="/agendar"
-            className="inline-flex min-h-11 items-center rounded-lg bg-ouro px-4 text-sm font-semibold text-fundo transition-colors hover:bg-ouro-claro"
+            className="inline-flex min-h-11 items-center rounded-lg bg-amarelo px-4 text-sm font-semibold text-fundo transition-colors hover:bg-amarelo-claro"
           >
             Agendar
           </Link>
@@ -154,31 +153,29 @@ export function Institucional({
         <section className="hero relative isolate overflow-hidden">
           <div className="mx-auto grid w-full max-w-5xl items-center gap-10 px-5 pt-14 pb-20 sm:pt-20 sm:pb-28 md:grid-cols-[1.25fr_1fr]">
             <div>
-              <p className="inline-flex items-center gap-2 rounded-full border border-borda bg-fundo/50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-ouro-claro backdrop-blur">
-                <span aria-hidden="true" className="size-1.5 rounded-full bg-ouro" />
-                Corte · Barba · Atitude
+              <p className="inline-flex items-center gap-2 rounded-full border border-borda bg-fundo/50 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-amarelo-claro backdrop-blur">
+                <span aria-hidden="true" className="size-1.5 rounded-full bg-amarelo" />
+                Óculos · Lentes · Hora marcada
               </p>
-              <h1 className="mt-6 font-titulo font-semibold uppercase leading-[0.9] tracking-wide">
-                {partesDoNome().map((parte) => (
-                  <span
-                    key={parte.texto}
-                    className={
-                      parte.destaque
-                        ? "hero-marca block text-[clamp(4.5rem,24vw,10.5rem)]"
-                        : "block text-[clamp(2.75rem,13vw,5.5rem)] text-texto"
-                    }
-                  >
-                    {parte.texto}
+              {/* Assinatura como na fachada: prefixo pequeno, nome em peso forte e slogan entre dois traços. */}
+              <h1 className="mt-7 font-titulo uppercase leading-none">
+                {SITE.prefixo && (
+                  <span className="block text-[clamp(0.9rem,3.6vw,1.35rem)] font-bold tracking-[0.32em] text-amarelo">
+                    {SITE.prefixo}
                   </span>
-                ))}
+                )}
+                <span className="hero-marca mt-1 block text-[clamp(2.1rem,10.4vw,3.9rem)] font-extrabold">
+                  {SITE.nome}
+                </span>
               </h1>
-              <p className="mt-5 flex items-center gap-4 font-titulo text-2xl font-medium uppercase tracking-[0.14em] text-texto sm:text-3xl">
-                <span aria-hidden="true" className="h-px w-10 shrink-0 bg-ouro sm:w-16" />
+              <p className="mt-3 flex items-center gap-3 font-titulo text-[clamp(0.7rem,3vw,1.05rem)] font-bold uppercase tracking-[0.2em] text-amarelo sm:gap-4">
+                <span aria-hidden="true" className="h-1 w-6 shrink-0 bg-amarelo sm:w-10" />
                 {SITE.slogan}
+                <span aria-hidden="true" className="h-1 w-6 shrink-0 bg-amarelo sm:w-10" />
               </p>
               <p className="mt-6 max-w-md text-lg leading-relaxed text-suave">
-                Corte na régua e barba alinhada com {SITE.barbeiro}. Você escolhe o horário, garante
-                a vaga pelo celular e chega só para sentar na cadeira.
+                Armações e lentes escolhidas com calma, com a atenção de quem entende do assunto. Você
+                escolhe o horário, garante a vaga pelo celular e é atendido sem espera.
               </p>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <Link href="/agendar" className={botaoOuro}>
@@ -196,13 +193,13 @@ export function Institucional({
 
             <div className="relative mx-auto hidden w-full max-w-sm md:block">
               <div aria-hidden="true" className="hero-brilho absolute inset-0 -z-10 rounded-full" />
-              <Selo className="w-full text-ouro" />
+              <Selo className="w-full text-amarelo" />
             </div>
           </div>
 
           {/* Selo como marca d'água no celular. */}
-          <Selo className="pointer-events-none absolute -right-24 -bottom-24 -z-10 w-80 text-ouro opacity-[0.13] md:hidden" />
-          <div className="faixa-barbeiro" aria-hidden="true" />
+          <Selo className="pointer-events-none absolute -right-24 -bottom-24 -z-10 w-80 text-amarelo opacity-[0.13] md:hidden" />
+          <div className="faixa-marca" aria-hidden="true" />
         </section>
 
         {/* DIFERENCIAIS */}
@@ -210,11 +207,21 @@ export function Institucional({
           <ul className="mx-auto grid w-full max-w-5xl gap-px bg-borda sm:grid-cols-3">
             {[
               ["Sem cadastro", "Nada de criar conta nem senha para lembrar."],
-              ["Vaga garantida", "Pagou, o horário é seu. Sem fila e sem desencontro."],
-              ["Confirmação na hora", "O Pix cai e a confirmação aparece na tela."],
+              [
+                "Vaga garantida",
+                SITE.cobraPagamento
+                  ? "Pagou, o horário é seu. Sem fila e sem desencontro."
+                  : "Marcou, o horário é seu. Sem fila e sem desencontro.",
+              ],
+              [
+                "Confirmação na hora",
+                SITE.cobraPagamento
+                  ? "O Pix cai e a confirmação aparece na tela."
+                  : "Escolheu o horário, a confirmação aparece na tela.",
+              ],
             ].map(([titulo, texto]) => (
               <li key={titulo} className="bg-superficie px-5 py-7">
-                <p className="font-titulo text-xl font-semibold uppercase tracking-wide text-ouro-claro">
+                <p className="font-titulo text-xl font-semibold uppercase tracking-wide text-amarelo-claro">
                   {titulo}
                 </p>
                 <p className="mt-1 text-suave">{texto}</p>
@@ -224,11 +231,11 @@ export function Institucional({
         </section>
 
         {/* SERVIÇOS */}
-        <Secao id="servicos" rotulo="Serviços" titulo="O que a gente faz">
+        <Secao id="servicos" rotulo="Serviços" titulo="Como podemos ajudar">
           {servicos.length === 0 ? (
             <p className="text-suave">
               A tabela de serviços está sendo atualizada.{" "}
-              <Link href="/agendar" className="text-ouro-claro underline underline-offset-4">
+              <Link href="/agendar" className="text-amarelo-claro underline underline-offset-4">
                 Veja os horários disponíveis
               </Link>
               .
@@ -238,18 +245,18 @@ export function Institucional({
               {servicos.map((servico) => (
                 <li
                   key={servico.id}
-                  className="group flex flex-col rounded-2xl border border-borda bg-superficie p-6 transition-colors hover:border-ouro"
+                  className="group flex flex-col rounded-2xl border border-borda bg-superficie p-6 transition-colors hover:border-amarelo"
                 >
                   <h3 className="font-titulo text-2xl font-semibold uppercase tracking-wide">
                     {servico.nome}
                   </h3>
                   <p className="mt-1 text-sm text-suave">{formatarDuracao(servico.duracaoMinutos)}</p>
-                  <p className="mt-6 font-titulo text-4xl font-semibold text-ouro-claro">
-                    {formatarReais(servico.preco)}
+                  <p className="mt-6 font-titulo text-4xl font-semibold text-amarelo-claro">
+                    {SITE.cobraPagamento ? formatarReais(servico.preco) : "Gratuito"}
                   </p>
                   <Link
                     href="/agendar"
-                    className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-texto underline-offset-4 group-hover:text-ouro-claro hover:underline"
+                    className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-texto underline-offset-4 group-hover:text-amarelo-claro hover:underline"
                     aria-label={`Agendar ${servico.nome}`}
                   >
                     Agendar <span aria-hidden="true">→</span>
@@ -266,13 +273,18 @@ export function Institucional({
             <ol className="grid gap-8 sm:grid-cols-3">
               {[
                 ["Escolha", "Selecione o serviço, o dia e um horário livre na agenda."],
-                ["Garanta", "Informe seus dados e pague por Pix ou cartão."],
-                ["Apareça", "Chegue no horário marcado. A cadeira já está te esperando."],
+                [
+                  "Garanta",
+                  SITE.cobraPagamento
+                    ? "Informe seus dados e pague por Pix ou cartão."
+                    : "Informe seu nome e WhatsApp. Agendar não tem custo.",
+                ],
+                ["Apareça", "Chegue no horário marcado. Seu atendimento começa na hora."],
               ].map(([titulo, texto], indice) => (
                 <li key={titulo} className="relative pl-16 sm:pl-0">
                   <span
                     aria-hidden="true"
-                    className="absolute top-0 left-0 font-titulo text-6xl font-semibold leading-none text-ouro/30 sm:static sm:block sm:text-7xl"
+                    className="absolute top-0 left-0 font-titulo text-6xl font-semibold leading-none text-amarelo/30 sm:static sm:block sm:text-7xl"
                   >
                     {String(indice + 1).padStart(2, "0")}
                   </span>
@@ -284,32 +296,64 @@ export function Institucional({
               ))}
             </ol>
             <p className="mt-10 rounded-2xl border border-borda bg-fundo px-5 py-4 text-sm leading-relaxed text-suave">
-              <strong className="text-texto">Imprevisto?</strong> Dá para cancelar pelo próprio site até 1
-              hora antes do horário, com estorno de 70% do valor.{" "}
-              <Link href="/cancelar" className="text-ouro-claro underline underline-offset-4">
-                Cancelar meu horário
-              </Link>
+              <strong className="text-texto">Imprevisto?</strong>{" "}
+              {SITE.clienteCancela ? (
+                <>
+                  Dá para cancelar pelo próprio site até 1 hora antes do horário
+                  {SITE.cobraPagamento && ", com estorno de 70% do valor"}.{" "}
+                  <Link href="/cancelar" className="text-amarelo-claro underline underline-offset-4">
+                    Cancelar meu horário
+                  </Link>
+                </>
+              ) : (
+                "Avise a gente com antecedência para liberarmos o horário para outra pessoa."
+              )}
             </p>
           </Secao>
         </div>
 
-        {/* O BARBEIRO */}
-        <Secao id="barbeiro" rotulo="Quem cuida de você" titulo={SITE.barbeiro}>
+        {/* A ÓTICA */}
+        <Secao id="sobre" rotulo="Quem cuida de você" titulo={SITE.responsavel?.nome ?? `A ${SITE.nome}`}>
           <div className={`grid items-center gap-10 ${SITE.retrato ? "md:grid-cols-[minmax(0,22rem)_1fr]" : ""}`}>
             {SITE.retrato && (
-              // eslint-disable-next-line @next/next/no-img-element -- foto enviada pelo barbeiro, servida de /public
+              // eslint-disable-next-line @next/next/no-img-element -- foto enviada pela ótica, servida de /public
               <img
                 src={SITE.retrato.src}
                 alt={SITE.retrato.alt}
                 loading="lazy"
-                className="aspect-[4/5] w-full rounded-2xl border border-borda object-cover"
+                className="aspect-[4/5] w-full rounded-2xl border border-borda object-cover object-top"
               />
             )}
             <div className="max-w-2xl">
-              <p className="text-xl leading-relaxed text-texto">
-                Na {SITE.nome}, cada corte é feito com calma e capricho. O {primeiroNome} acredita que
-                sair da cadeira bem cuidado muda o jeito de encarar o dia — por isso o lema da casa:{" "}
-                <em className="text-ouro-claro not-italic">{SITE.slogan.toLowerCase()}</em>.
+              {SITE.responsavel && (
+                <>
+                  <p className="-mt-6 font-titulo text-sm font-bold uppercase tracking-[0.18em] text-amarelo-claro">
+                    {SITE.responsavel.formacao}
+                  </p>
+                  <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+                    {SITE.responsavel.destaques.map((item) => (
+                      <li key={item.rotulo} className="rounded-2xl border border-borda bg-superficie px-5 py-4">
+                        <span className="block font-titulo text-2xl font-extrabold text-amarelo">
+                          {item.valor}
+                        </span>
+                        <span className="text-sm text-suave">{item.rotulo}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  {SITE.responsavel.bio.map((paragrafo, indice) => (
+                    <p
+                      key={paragrafo}
+                      className={indice === 0 ? "mt-6 text-xl leading-relaxed text-texto" : "mt-4 leading-relaxed text-suave"}
+                    >
+                      {paragrafo}
+                    </p>
+                  ))}
+                </>
+              )}
+              <p className={SITE.responsavel ? "mt-4 leading-relaxed text-suave" : "text-xl leading-relaxed text-texto"}>
+                Na {SITE.nome}, cada atendimento é feito com calma e atenção. Acreditamos que enxergar
+                bem muda o jeito de encarar o dia — por isso o lema da casa:{" "}
+                <em className="text-amarelo-claro not-italic">{SITE.slogan.toLowerCase()}</em>.
               </p>
               <p className="mt-4 leading-relaxed text-suave">
                 Atendimento com hora marcada, sem pressa e sem fila. Você é atendido no horário que
@@ -325,11 +369,11 @@ export function Institucional({
         {/* GALERIA: só aparece quando houver fotos reais em src/lib/site.ts */}
         {temGaleria && (
           <div className="border-t border-borda bg-superficie">
-            <Secao id="galeria" rotulo="Galeria" titulo="Saindo da cadeira">
+            <Secao id="galeria" rotulo="Galeria" titulo="Nosso espaço">
               <ul className="grid grid-cols-2 gap-3 md:grid-cols-3">
                 {SITE.galeria.map((foto) => (
                   <li key={foto.src}>
-                    {/* eslint-disable-next-line @next/next/no-img-element -- fotos enviadas pelo barbeiro, servidas de /public */}
+                    {/* eslint-disable-next-line @next/next/no-img-element -- fotos enviadas pela ótica, servidas de /public */}
                     <img
                       src={foto.src}
                       alt={foto.alt}
@@ -348,7 +392,7 @@ export function Institucional({
           <Secao id="contato" rotulo="Horários e contato" titulo="Passa lá">
             <div className="grid gap-10 md:grid-cols-2">
               <div>
-                <h3 className="font-titulo text-xl font-semibold uppercase tracking-wide text-ouro-claro">
+                <h3 className="font-titulo text-xl font-semibold uppercase tracking-wide text-amarelo-claro">
                   Funcionamento
                 </h3>
                 <dl className="mt-4 divide-y divide-borda border-y border-borda">
@@ -363,7 +407,7 @@ export function Institucional({
                 </dl>
               </div>
               <div>
-                <h3 className="font-titulo text-xl font-semibold uppercase tracking-wide text-ouro-claro">
+                <h3 className="font-titulo text-xl font-semibold uppercase tracking-wide text-amarelo-claro">
                   Fale com a gente
                 </h3>
                 {SITE.endereco && (
@@ -376,7 +420,7 @@ export function Institucional({
                           href={SITE.mapaUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-ouro-claro underline underline-offset-4"
+                          className="text-amarelo-claro underline underline-offset-4"
                         >
                           Ver no mapa
                         </a>
@@ -385,7 +429,7 @@ export function Institucional({
                   </p>
                 )}
                 <p className="mt-4 leading-relaxed text-suave">
-                  Dúvida sobre serviço, horário ou encaixe? Chama no WhatsApp. Para garantir a vaga, o
+                  Dúvida sobre serviço, horário ou produto? Chama no WhatsApp. Para garantir a vaga, o
                   caminho mais rápido é agendar pelo site.
                 </p>
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row md:flex-col lg:flex-row">
@@ -406,7 +450,7 @@ export function Institucional({
                       href={`https://instagram.com/${SITE.instagram}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-ouro-claro underline underline-offset-4"
+                      className="text-amarelo-claro underline underline-offset-4"
                     >
                       @{SITE.instagram}
                     </a>
@@ -421,7 +465,7 @@ export function Institucional({
       <footer className="border-t border-borda">
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-5 py-8 text-sm text-suave sm:flex-row sm:items-center sm:justify-between">
           <p>
-            <span className="font-titulo text-base font-semibold uppercase tracking-[0.18em] text-texto">
+            <span className="font-titulo text-base font-extrabold uppercase tracking-[0.06em] text-texto">
               <Marca />
             </span>
             <span className="mx-2" aria-hidden="true">
@@ -433,11 +477,13 @@ export function Institucional({
             <Link href="/agendar" className="inline-flex min-h-11 items-center hover:text-texto">
               Agendar
             </Link>
-            <Link href="/cancelar" className="inline-flex min-h-11 items-center hover:text-texto">
-              Cancelar horário
-            </Link>
+            {SITE.clienteCancela && (
+              <Link href="/cancelar" className="inline-flex min-h-11 items-center hover:text-texto">
+                Cancelar horário
+              </Link>
+            )}
             <Link href="/admin" className="inline-flex min-h-11 items-center hover:text-texto">
-              Área do barbeiro
+              Área da ótica
             </Link>
           </nav>
         </div>

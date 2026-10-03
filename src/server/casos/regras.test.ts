@@ -18,8 +18,21 @@ let estado: EstadoFake;
 let portas: Portas;
 const corte = '11111111-1111-4111-8111-111111111111';
 const barba = '22222222-2222-4222-8222-222222222222';
+// Catálogo próprio dos testes: as regras de cobrança e estorno precisam de serviços com preço.
+const servicosDeTeste = [
+  { id: corte, nome: 'Corte', precoCentavos: 4000, duracaoMinutos: 30, ativo: true },
+  { id: barba, nome: 'Barba', precoCentavos: 3000, duracaoMinutos: 30, ativo: true },
+  {
+    id: '33333333-3333-4333-8333-333333333333',
+    nome: 'Corte + Barba',
+    precoCentavos: 6000,
+    duracaoMinutos: 60,
+    ativo: true,
+  },
+];
 beforeEach(() => {
   estado = criarEstadoFake();
+  estado.servicos = structuredClone(servicosDeTeste);
   portas = {
     repositorio: new RepositorioFake(estado),
     pagamentos: new PagamentosFake(estado),
@@ -45,6 +58,51 @@ async function pagar(id: string, evento = 'evt_1') {
     netValue: 38,
   });
 }
+describe('agendamento sem cobrança', () => {
+  const semCusto = (inicio: string, telefone = '11999998888') =>
+    criarAgendamento(
+      portas,
+      relogio,
+      { nome: 'Cliente', telefone, servicosIds: [corte], dataInicio: inicio },
+      false,
+    );
+  it('nasce confirmado, com valor zero, sem cobrança e com evento na agenda', async () => {
+    const r = await semCusto('2026-10-02T10:00:00-03:00');
+    expect(r).toMatchObject({ valorTotal: 0, expiraEm: null, pagamento: null });
+    const a = await portas.repositorio.buscarAgendamento(r.id);
+    expect(a).toMatchObject({ status: 'pago', valorTotalCentavos: 0, asaasCobrancaId: null });
+    expect(a!.googleEventId).toBeTruthy();
+    await expect(semCusto('2026-10-02T10:00:00-03:00', '11988887777')).rejects.toMatchObject({
+      codigo: 'SLOT_INDISPONIVEL',
+    });
+  });
+  it('limita os horários futuros por telefone', async () => {
+    for (const hora of ['10', '11', '12']) await semCusto(`2026-10-02T${hora}:00:00-03:00`);
+    await expect(semCusto('2026-10-02T13:00:00-03:00')).rejects.toMatchObject({ codigo: 'MUITAS_RESERVAS' });
+    await expect(semCusto('2026-10-02T13:00:00-03:00', '11988887777')).resolves.toBeTruthy();
+  });
+  it('cliente e admin cancelam sem estorno', async () => {
+    const doCliente = await semCusto('2026-10-02T10:00:00-03:00');
+    const a = await portas.repositorio.buscarAgendamento(doCliente.id);
+    const cancelado = await cancelarCliente(portas, relogio, '11999998888', a!.codigoCancelamento);
+    expect(cancelado.valorEstornado).toBe(0);
+    const doAdmin = await semCusto('2026-10-02T11:00:00-03:00');
+    expect(await cancelarAdmin(portas, relogio, doAdmin.id)).toMatchObject({
+      status: 'cancelado',
+      valorEstornado: 0,
+    });
+  });
+  it('com cobrança, exige CPF e forma de pagamento', async () => {
+    await expect(
+      criarAgendamento(portas, relogio, {
+        nome: 'Cliente',
+        telefone: '11999998888',
+        servicosIds: [corte],
+        dataInicio: '2026-10-02T10:00:00-03:00',
+      }),
+    ).rejects.toMatchObject({ codigo: 'DADOS_INVALIDOS' });
+  });
+});
 describe('agenda e pagamentos', () => {
   it('gera slots de 30 minutos e respeita fechamento, duração e bloqueio externo', async () => {
     estado.ocupados.push({ inicio: '2026-10-03T09:30:00-03:00', fim: '2026-10-03T10:00:00-03:00' });

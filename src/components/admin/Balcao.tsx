@@ -156,7 +156,7 @@ export function Balcao({ aoCriar }: { aoCriar: (dia: string, aviso: string) => v
               ? "Nenhum serviço escolhido"
               : `${escolhidos[0].nome} · ${formatarDuracao(minutos)}`}
           </span>
-          <span className="text-xl font-semibold text-ouro-claro">{formatarCentavos(centavos)}</span>
+          <span className="text-xl font-semibold text-amarelo-claro">{formatarCentavos(centavos)}</span>
         </p>
 
         {erro && <Aviso tipo="erro">{erro}</Aviso>}

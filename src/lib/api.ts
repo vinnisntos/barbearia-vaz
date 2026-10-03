@@ -31,10 +31,11 @@ export type DadosPagamento =
 export interface NovoAgendamento {
   nome: string;
   telefone: string;
-  cpf: string;
+  /** Só quando há cobrança (ver `SITE.cobraPagamento`). */
+  cpf?: string;
   servicosIds: string[];
   dataInicio: string;
-  formaPagamento: FormaPagamento;
+  formaPagamento?: FormaPagamento;
 }
 
 export interface AgendamentoCriado {
@@ -42,8 +43,9 @@ export interface AgendamentoCriado {
   valorTotal: number;
   dataInicio: string;
   dataFim: string;
-  expiraEm: string;
-  pagamento: DadosPagamento;
+  /** `null` no agendamento sem custo, que já nasce confirmado. */
+  expiraEm: string | null;
+  pagamento: DadosPagamento | null;
 }
 
 export interface Agendamento {

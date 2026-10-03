@@ -20,6 +20,8 @@ agendamentos vivos (pendente não expirado / pago) nem com eventos ocupados do G
 e nunca no passado. `400 DATA_INVALIDA | SERVICO_INVALIDO`.
 
 ### `POST /api/agendamentos`
+**Com cobrança** (`SITE.cobraPagamento = true` em `src/lib/site.ts`):
+
 Body: `{ nome, telefone, cpf, servicosIds: [uuid], dataInicio, formaPagamento: "PIX" | "CARTAO" }`
 `servicosIds` deve ter exatamente 1 item (D11); mais de um → `400 DADOS_INVALIDOS` (na disponibilidade, `400 SERVICO_INVALIDO`). Vale também para o balcão.
 `201 { id, valorTotal, dataInicio, dataFim, expiraEm, pagamento }` onde `pagamento` é
@@ -29,6 +31,13 @@ aguardando pagamento neste telefone), `502 PAGAMENTO_INDISPONIVEL`
 (se a cobrança falhar, o agendamento é marcado `expirado` para liberar o horário).
 O CPF vai apenas para o Asaas; não é persistido.
 
+**Sem cobrança** (`SITE.cobraPagamento = false`, agendamento sem custo):
+Body: `{ nome, telefone, servicosIds: [uuid], dataInicio }` (`cpf` e `formaPagamento` são ignorados).
+`201 { id, valorTotal: 0, dataInicio, dataFim, expiraEm: null, pagamento: null }` — o agendamento já nasce
+`pago` (confirmado), com valor zero, sem cobrança no Asaas, e é espelhado no Google Calendar na hora.
+Erros: `400 DADOS_INVALIDOS`, `409 SLOT_INDISPONIVEL`, `429 MUITAS_RESERVAS` (já há 3 horários futuros
+neste telefone). Cancelamentos (cliente e admin) desses agendamentos não geram estorno (`valorEstornado: 0`).
+
 ### `GET /api/agendamentos/{id}`
 Usado no polling do checkout (a cada ~3s) e na tela de sucesso.
 `200 { id, status, nomeCliente, servicosResumo, valorTotal, dataInicio, dataFim, expiraEm, codigoCancelamento }`
@@ -36,6 +45,7 @@ Usado no polling do checkout (a cada ~3s) e na tela de sucesso.
 Um `pendente` com `expiraEm` no passado é devolvido como `expirado`. `404 NAO_ENCONTRADO`.
 
 ### `POST /api/cancelamentos`
+Com `SITE.clienteCancela = false` (só a loja cancela, pelo painel) responde sempre `404 NAO_ENCONTRADO`.
 Body: `{ telefone, pin }`
 `200 { agendamentoId, valorEstornado, dataInicio }`
 Erros: `404 NAO_ENCONTRADO` (telefone+PIN não batem com agendamento `pago` futuro — mesma

@@ -18,6 +18,7 @@ import {
 } from "@/lib/checkout-storage";
 import { formatarContador, formatarDataHora, formatarReais } from "@/lib/formato";
 import { useAgora } from "@/lib/hooks";
+import { SITE } from "@/lib/site";
 import { Aviso, Botao, Carregando, Cartao, classesBotao, Titulo } from "./ui";
 
 const INTERVALO_POLLING_MS = 3000;
@@ -164,12 +165,20 @@ function Resumo({ agendamento }: { agendamento: Agendamento }) {
             {formatarDataHora(agendamento.dataInicio)}
           </dd>
         </div>
-        <div className="flex items-baseline justify-between border-t border-borda pt-2">
-          <dt>Valor</dt>
-          <dd className="text-xl font-semibold text-ouro-claro">
-            {formatarReais(agendamento.valorTotal)}
-          </dd>
-        </div>
+        {SITE.cobraPagamento && (
+          <div className="flex items-baseline justify-between border-t border-borda pt-2">
+            <dt>Valor</dt>
+            <dd className="text-xl font-semibold text-amarelo-claro">
+              {formatarReais(agendamento.valorTotal)}
+            </dd>
+          </div>
+        )}
+        {SITE.endereco && (
+          <div>
+            <dt className="text-sm text-suave">Onde</dt>
+            <dd className="font-medium break-words">{SITE.endereco}</dd>
+          </div>
+        )}
       </dl>
     </Cartao>
   );
@@ -230,7 +239,7 @@ function Pendente({
         >
           <span
             aria-hidden="true"
-            className="size-2.5 shrink-0 animate-pulse rounded-full bg-ouro"
+            className="size-2.5 shrink-0 animate-pulse rounded-full bg-amarelo"
           />
           {esgotado ? "Tempo esgotado, conferindo…" : "Aguardando pagamento"}
         </p>
@@ -391,13 +400,14 @@ function SimularPagamento({ id }: { id: string }) {
 
 function Sucesso({ agendamento }: { agendamento: Agendamento }) {
   const mensagem = [
-    "Olá! Acabei de agendar e pagar pelo site.",
+    SITE.cobraPagamento ? "Olá! Acabei de agendar e pagar pelo site." : "Olá! Acabei de agendar pelo site.",
     `Nome: ${agendamento.nomeCliente}`,
     `Serviço: ${agendamento.servicosResumo}`,
     `Quando: ${formatarDataHora(agendamento.dataInicio)}`,
-    `Valor pago: ${formatarReais(agendamento.valorTotal)}`,
+    ...(SITE.cobraPagamento ? [`Valor pago: ${formatarReais(agendamento.valorTotal)}`] : []),
+    ...(SITE.endereco ? [`Endereço: ${SITE.endereco}`] : []),
     // O PIN vai junto para ficar salvo na conversa do cliente, caso ele não anote.
-    ...(agendamento.codigoCancelamento
+    ...(SITE.clienteCancela && agendamento.codigoCancelamento
       ? [`PIN de cancelamento: ${agendamento.codigoCancelamento}`]
       : []),
   ].join("\n");
@@ -417,14 +427,16 @@ function Sucesso({ agendamento }: { agendamento: Agendamento }) {
           </svg>
         </span>
         <Titulo>Horário confirmado!</Titulo>
-        <p className="text-suave">Pagamento recebido. Te esperamos na barbearia.</p>
+        <p className="text-suave">
+          {SITE.cobraPagamento && "Pagamento recebido. "}Te esperamos na ótica.
+        </p>
       </div>
 
       <Resumo agendamento={agendamento} />
 
-      {agendamento.codigoCancelamento && (
-        <div className="rounded-2xl border-2 border-ouro bg-ouro/10 p-4 text-center">
-          <p className="text-sm font-medium text-ouro-claro">Seu PIN de cancelamento</p>
+      {SITE.clienteCancela && agendamento.codigoCancelamento && (
+        <div className="rounded-2xl border-2 border-amarelo bg-amarelo/10 p-4 text-center">
+          <p className="text-sm font-medium text-amarelo-claro">Seu PIN de cancelamento</p>
           <p className="my-2 font-mono text-5xl font-bold tracking-[0.3em] text-texto select-all">
             {/* tracking adiciona espaço depois da última letra; o padding compensa */}
             <span className="pl-[0.3em]">{agendamento.codigoCancelamento}</span>
@@ -443,15 +455,21 @@ function Sucesso({ agendamento }: { agendamento: Agendamento }) {
           rel="noopener noreferrer"
           className={classesBotao("primario", "w-full bg-verde hover:bg-[#6ee7a0]")}
         >
-          Enviar comprovante no WhatsApp
+          {SITE.cobraPagamento ? "Enviar comprovante no WhatsApp" : "Enviar confirmação no WhatsApp"}
         </a>
       )}
 
       <p className="text-center text-sm leading-relaxed text-suave">
-        Precisa desmarcar? Até 1 hora antes, com estorno de 70%.{" "}
-        <Link href="/cancelar" className="text-ouro-claro underline underline-offset-4">
-          Cancelar meu horário
-        </Link>
+        {SITE.clienteCancela ? (
+          <>
+            Precisa desmarcar? Até 1 hora antes{SITE.cobraPagamento && ", com estorno de 70%"}.{" "}
+            <Link href="/cancelar" className="text-amarelo-claro underline underline-offset-4">
+              Cancelar meu horário
+            </Link>
+          </>
+        ) : (
+          "Não vai poder vir? Avise a gente com antecedência."
+        )}
       </p>
     </>
   );

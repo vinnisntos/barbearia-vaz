@@ -49,8 +49,8 @@ export function SeletorHorario({
                   onClick={() => aoMudarDia(d)}
                   className={`flex h-[4.5rem] w-14 flex-col items-center justify-center rounded-xl border text-sm transition-colors ${
                     ativo
-                      ? "border-ouro bg-ouro text-fundo"
-                      : "border-borda bg-superficie text-texto hover:border-ouro"
+                      ? "border-amarelo bg-amarelo text-fundo"
+                      : "border-borda bg-superficie text-texto hover:border-amarelo"
                   }`}
                 >
                   <span className="text-xs uppercase">
@@ -91,8 +91,8 @@ export function SeletorHorario({
                     onClick={() => aoEscolher(h)}
                     className={`min-h-12 w-full rounded-xl border text-base font-semibold tabular-nums transition-colors ${
                       ativo
-                        ? "border-ouro bg-ouro text-fundo"
-                        : "border-borda bg-superficie text-texto hover:border-ouro"
+                        ? "border-amarelo bg-amarelo text-fundo"
+                        : "border-borda bg-superficie text-texto hover:border-amarelo"
                     }`}
                   >
                     {formatarHora(h)}

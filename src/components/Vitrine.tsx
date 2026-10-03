@@ -12,6 +12,7 @@ import {
   somarDias,
 } from "@/lib/formato";
 import { useHoje, useRecurso } from "@/lib/hooks";
+import { SITE } from "@/lib/site";
 import {
   cpfValido,
   mascararCpf,
@@ -39,6 +40,8 @@ const ETAPAS: { id: Etapa; nome: string }[] = [
 ];
 
 const DIAS_A_FRENTE = 14;
+// Sem cobrança, a tela não mostra preço nem pede CPF e forma de pagamento.
+const COBRA = SITE.cobraPagamento;
 
 export function Vitrine() {
   const router = useRouter();
@@ -85,7 +88,7 @@ export function Vitrine() {
     telefone: telefoneValido(telefone)
       ? null
       : "Informe um WhatsApp válido, com DDD.",
-    cpf: cpfValido(cpf) ? null : "CPF inválido. Confira os números.",
+    cpf: !COBRA || cpfValido(cpf) ? null : "CPF inválido. Confira os números.",
   };
   const formularioValido = !erros.nome && !erros.telefone && !erros.cpf;
 
@@ -110,12 +113,11 @@ export function Vitrine() {
       const criado = await api.criarAgendamento({
         nome: nome.trim(),
         telefone,
-        cpf,
         servicosIds: selecionados,
         dataInicio: horario,
-        formaPagamento: forma,
+        ...(COBRA ? { cpf, formaPagamento: forma } : {}),
       });
-      guardarPagamento(criado.id, criado.pagamento);
+      if (criado.pagamento) guardarPagamento(criado.id, criado.pagamento);
       router.push(`/agendamento/${criado.id}`);
       // Mantém "enviando" até a navegação concluir.
     } catch (excecao) {
@@ -145,7 +147,7 @@ export function Vitrine() {
             className="flex-1"
           >
             <span
-              className={`block h-1 rounded-full ${i <= indiceEtapa ? "bg-ouro" : "bg-borda"}`}
+              className={`block h-1 rounded-full ${i <= indiceEtapa ? "bg-amarelo" : "bg-borda"}`}
             />
             <span
               className={`mt-1 block text-xs ${i === indiceEtapa ? "text-texto" : "text-suave"}`}
@@ -171,7 +173,9 @@ export function Vitrine() {
           ) : !servicos.dados ? (
             <Carregando texto="Carregando serviços…" />
           ) : servicos.dados.length === 0 ? (
-            <Aviso>Nenhum serviço disponível no momento. Volte mais tarde.</Aviso>
+            <Aviso>
+              Nenhum serviço disponível no momento. Volte mais tarde.
+            </Aviso>
           ) : (
             <SeletorServicos
               servicos={servicos.dados}
@@ -181,15 +185,20 @@ export function Vitrine() {
           )}
 
           <div className="sticky bottom-0 -mx-4 mt-auto border-t border-borda bg-fundo/95 px-4 py-3 backdrop-blur">
-            <p aria-live="polite" className="mb-2 flex items-baseline justify-between gap-2">
+            <p
+              aria-live="polite"
+              className="mb-2 flex items-baseline justify-between gap-2"
+            >
               <span className="text-suave">
                 {escolhidos.length === 0
                   ? "Nenhum serviço escolhido"
                   : `${escolhidos[0].nome} · ${formatarDuracao(minutos)}`}
               </span>
-              <span className="text-xl font-semibold text-ouro-claro">
-                {formatarCentavos(centavos)}
-              </span>
+              {COBRA && (
+                <span className="text-xl font-semibold text-amarelo-claro">
+                  {formatarCentavos(centavos)}
+                </span>
+              )}
             </p>
             <Botao
               className="w-full"
@@ -207,8 +216,9 @@ export function Vitrine() {
           <div>
             <Titulo ref={tituloRef}>Quando fica bom?</Titulo>
             <p className="mt-1 text-suave">
-              {escolhidos.map((s) => s.nome).join(" + ")} · {formatarDuracao(minutos)} ·{" "}
-              {formatarCentavos(centavos)}
+              {escolhidos.map((s) => s.nome).join(" + ")} ·{" "}
+              {formatarDuracao(minutos)}
+              {COBRA && ` · ${formatarCentavos(centavos)}`}
             </p>
           </div>
 
@@ -259,14 +269,17 @@ export function Vitrine() {
               {formatarDataHora(horario)}
             </p>
             <p className="text-suave">
-              {escolhidos.map((s) => s.nome).join(" + ")} · {formatarDuracao(minutos)}
+              {escolhidos.map((s) => s.nome).join(" + ")} ·{" "}
+              {formatarDuracao(minutos)}
             </p>
-            <p className="mt-2 flex items-baseline justify-between border-t border-borda pt-2">
-              <span>Total</span>
-              <span className="text-xl font-semibold text-ouro-claro">
-                {formatarCentavos(centavos)}
-              </span>
-            </p>
+            {COBRA && (
+              <p className="mt-2 flex items-baseline justify-between border-t border-borda pt-2">
+                <span>Total</span>
+                <span className="text-xl font-semibold text-amarelo-claro">
+                  {formatarCentavos(centavos)}
+                </span>
+              </p>
+            )}
           </Cartao>
 
           <form onSubmit={enviar} noValidate className="flex flex-col gap-4">
@@ -290,53 +303,76 @@ export function Vitrine() {
               value={telefone}
               onChange={(e) => setTelefone(mascararTelefone(e.target.value))}
               erro={validar ? erros.telefone : null}
-              ajuda="Você vai usar este número se precisar cancelar."
+              ajuda={
+                SITE.clienteCancela
+                  ? "Você vai usar este número se precisar cancelar."
+                  : "Usamos este número para falar com você sobre o agendamento."
+              }
               required
             />
-            <Campo
-              rotulo="CPF"
-              name="cpf"
-              inputMode="numeric"
-              autoComplete="off"
-              placeholder="000.000.000-00"
-              value={cpf}
-              onChange={(e) => setCpf(mascararCpf(e.target.value))}
-              erro={validar ? erros.cpf : null}
-              ajuda="Exigido pelo meio de pagamento para emitir a cobrança. Não fica guardado com a barbearia."
-              required
-            />
+            {COBRA && (
+              <Campo
+                rotulo="CPF"
+                name="cpf"
+                inputMode="numeric"
+                autoComplete="off"
+                placeholder="000.000.000-00"
+                value={cpf}
+                onChange={(e) => setCpf(mascararCpf(e.target.value))}
+                erro={validar ? erros.cpf : null}
+                ajuda="Exigido pelo meio de pagamento para emitir a cobrança. Não fica guardado com a ótica."
+                required
+              />
+            )}
 
-            <fieldset>
-              <legend className="mb-1.5 text-sm font-medium">Como quer pagar?</legend>
-              <div className="grid grid-cols-2 gap-3">
-                {(
-                  [
-                    { valor: "PIX", nome: "Pix", detalhe: "Confirma na hora" },
-                    { valor: "CARTAO", nome: "Cartão", detalhe: "Página segura" },
-                  ] as const
-                ).map((opcao) => (
-                  <label
-                    key={opcao.valor}
-                    className="flex min-h-16 cursor-pointer flex-col justify-center rounded-xl border border-borda bg-superficie px-4 py-2 has-checked:border-ouro has-checked:bg-relevo has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ouro-claro"
-                  >
-                    <input
-                      type="radio"
-                      name="formaPagamento"
-                      className="sr-only"
-                      value={opcao.valor}
-                      checked={forma === opcao.valor}
-                      onChange={() => setForma(opcao.valor)}
-                    />
-                    <span className="font-semibold">{opcao.nome}</span>
-                    <span className="text-sm text-suave">{opcao.detalhe}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
+            {COBRA && (
+              <fieldset>
+                <legend className="mb-1.5 text-sm font-medium">
+                  Como quer pagar?
+                </legend>
+                <div className="grid grid-cols-2 gap-3">
+                  {(
+                    [
+                      {
+                        valor: "PIX",
+                        nome: "Pix",
+                        detalhe: "Confirma na hora",
+                      },
+                      {
+                        valor: "CARTAO",
+                        nome: "Cartão",
+                        detalhe: "Página segura",
+                      },
+                    ] as const
+                  ).map((opcao) => (
+                    <label
+                      key={opcao.valor}
+                      className="flex min-h-16 cursor-pointer flex-col justify-center rounded-xl border border-borda bg-superficie px-4 py-2 has-checked:border-amarelo has-checked:bg-relevo has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-amarelo-claro"
+                    >
+                      <input
+                        type="radio"
+                        name="formaPagamento"
+                        className="sr-only"
+                        value={opcao.valor}
+                        checked={forma === opcao.valor}
+                        onChange={() => setForma(opcao.valor)}
+                      />
+                      <span className="font-semibold">{opcao.nome}</span>
+                      <span className="text-sm text-suave">
+                        {opcao.detalhe}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            )}
 
             <p className="text-sm leading-relaxed text-suave">
-              O horário fica reservado por 10 minutos enquanto você paga. Cancelamento
-              até 1 hora antes, com estorno de 70% do valor.
+              {COBRA
+                ? "O horário fica reservado por 10 minutos enquanto você paga. Cancelamento até 1 hora antes, com estorno de 70% do valor."
+                : SITE.clienteCancela
+                  ? "Agendar não tem custo. Se não puder vir, cancele pelo site até 1 hora antes para liberar o horário."
+                  : "Agendar não tem custo. Se não puder vir, avise a gente com antecedência."}
             </p>
 
             {erroEnvio && <Aviso tipo="erro">{erroEnvio}</Aviso>}
@@ -350,19 +386,23 @@ export function Vitrine() {
                 Voltar
               </Botao>
               <Botao type="submit" className="flex-1" ocupado={enviando}>
-                {enviando ? "Reservando…" : `Pagar ${formatarCentavos(centavos)}`}
+                {enviando
+                  ? "Reservando…"
+                  : COBRA
+                    ? `Pagar ${formatarCentavos(centavos)}`
+                    : "Confirmar agendamento"}
               </Botao>
             </div>
           </form>
         </section>
       )}
 
-      {etapa === "servicos" && (
+      {etapa === "servicos" && SITE.clienteCancela && (
         <p className="text-center text-sm text-suave">
           Já agendou e precisa desmarcar?{" "}
           <Link
             href="/cancelar"
-            className="inline-flex min-h-11 items-center font-medium text-ouro-claro underline underline-offset-4"
+            className="inline-flex min-h-11 items-center font-medium text-amarelo-claro underline underline-offset-4"
           >
             Cancelar meu horário
           </Link>

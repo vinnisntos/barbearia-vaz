@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Simbolo } from "./Logo";
 import { Marca } from "./Marca";
 import {
   useEffect,
@@ -18,10 +19,10 @@ const base =
   "inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-base font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50";
 
 const variantes: Record<Variante, string> = {
-  primario: "bg-ouro text-fundo hover:bg-ouro-claro",
-  secundario: "border border-borda bg-relevo text-texto hover:border-ouro",
+  primario: "bg-amarelo text-fundo hover:bg-amarelo-claro",
+  secundario: "border border-borda bg-relevo text-texto hover:border-amarelo",
   perigo: "bg-perigo text-white hover:bg-[#c9342b]",
-  fantasma: "text-ouro-claro underline-offset-4 hover:underline",
+  fantasma: "text-amarelo-claro underline-offset-4 hover:underline",
 };
 
 export function classesBotao(variante: Variante = "primario", extra = ""): string {
@@ -78,7 +79,7 @@ type TipoAviso = "erro" | "alerta" | "info" | "sucesso";
 
 const coresAviso: Record<TipoAviso, string> = {
   erro: "border-vermelho/60 bg-vermelho/10 text-texto",
-  alerta: "border-ouro/60 bg-ouro/10 text-texto",
+  alerta: "border-amarelo/60 bg-amarelo/10 text-texto",
   info: "border-borda bg-relevo text-suave",
   sucesso: "border-verde/60 bg-verde/10 text-texto",
 };
@@ -214,7 +215,8 @@ export function Cabecalho({ subtitulo }: { subtitulo?: string }) {
   return (
     <header className="px-4 pt-6 pb-2 text-center">
       <Link href="/" className="inline-block rounded-lg px-2 py-1">
-        <span className="block font-titulo text-3xl font-semibold uppercase tracking-[0.18em] text-texto">
+        <span className="flex items-center justify-center gap-2.5 font-titulo text-2xl font-extrabold uppercase tracking-[0.06em] text-texto">
+          <Simbolo className="size-9 shrink-0 text-amarelo" />
           <Marca />
         </span>
       </Link>

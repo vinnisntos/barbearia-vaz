@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Geist, Oswald } from "next/font/google";
+import { Geist, Montserrat } from "next/font/google";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
@@ -9,10 +9,9 @@ const geist = Geist({
   subsets: ["latin"],
 });
 
-const oswald = Oswald({
-  variable: "--font-oswald",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
-  weight: ["500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -20,20 +19,20 @@ export const metadata: Metadata = {
     default: `${SITE.nome} — ${SITE.slogan}`,
     template: `%s · ${SITE.nome}`,
   },
-  description: `Escolha o serviço, o dia e o horário e garanta sua vaga na ${SITE.nome} pagando por Pix ou cartão.`,
+  description: `Escolha o serviço, o dia e o horário e garanta sua vaga na ${SITE.nome}${SITE.cobraPagamento ? " pagando por Pix ou cartão" : ", sem custo para agendar"}.`,
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#12100e",
+  themeColor: "#061127",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${geist.variable} ${oswald.variable} h-full antialiased`}>
+    <html lang="pt-BR" className={`${geist.variable} ${montserrat.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
-        <div className="faixa-barbeiro" aria-hidden="true" />
+        <div className="faixa-marca" aria-hidden="true" />
         {children}
       </body>
     </html>

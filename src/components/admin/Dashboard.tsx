@@ -53,7 +53,7 @@ export function Dashboard() {
                 </dd>
               </div>
             </div>
-            <div className="rounded-2xl border-2 border-ouro bg-superficie p-4">
+            <div className="rounded-2xl border-2 border-amarelo bg-superficie p-4">
               <dt className="text-sm text-suave">Lucro líquido</dt>
               <dd
                 className={`mt-1 font-titulo text-4xl break-words ${

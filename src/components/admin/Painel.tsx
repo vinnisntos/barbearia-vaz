@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { ErroApi } from "@/lib/api";
 import { entrar, ErroLogin, MODO_FAKE, obterSessao, obterToken, sair, type Sessao } from "@/lib/auth";
 import { Aviso, Botao, Cabecalho, Campo, Carregando, Pagina, Titulo } from "../ui";
+import { Simbolo } from "../Logo";
 import { Marca } from "../Marca";
 import { Agenda } from "./Agenda";
 import { Balcao } from "./Balcao";
@@ -86,7 +87,8 @@ export function Painel() {
   return (
     <ContextoAdmin value={chamar}>
       <header className="mx-auto flex w-full max-w-md items-center justify-between gap-3 px-4 pt-4">
-        <p className="font-titulo text-xl uppercase tracking-widest">
+        <p className="flex items-center gap-2 font-titulo text-lg font-extrabold uppercase tracking-[0.06em]">
+          <Simbolo className="size-7 shrink-0 text-amarelo" />
           <Marca />
         </p>
         <button
@@ -113,7 +115,7 @@ export function Painel() {
                   setAvisoAgenda(null);
                 }}
                 className={`min-h-11 w-full rounded-lg text-sm font-semibold transition-colors ${
-                  aba === item.id ? "bg-ouro text-fundo" : "text-suave hover:text-texto"
+                  aba === item.id ? "bg-amarelo text-fundo" : "text-suave hover:text-texto"
                 }`}
               >
                 {item.nome}
@@ -177,7 +179,7 @@ function Login({
 
   return (
     <>
-      <Cabecalho subtitulo="Painel do barbeiro" />
+      <Cabecalho subtitulo="Painel da ótica" />
       <Pagina>
         <Titulo>Entrar</Titulo>
         {aviso && <Aviso tipo="alerta">{aviso}</Aviso>}

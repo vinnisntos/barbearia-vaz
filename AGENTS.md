@@ -8,9 +8,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# Barbearia (white-label)
+# Agendamento com pagamento (white-label)
 
-Marca, slogan e nome do barbeiro ficam só em `src/lib/site.ts`; não escreva o nome de um cliente em componentes.
+Marca e slogan ficam só em `src/lib/site.ts`; não escreva o nome de um cliente em componentes.
 
 Leia antes de codar: `docs/PRD.md` (regras e decisões), `docs/API.md` (contrato),
 `supabase/migrations/0001_init.sql` (schema), `docs/BACKLOG.md` (o que é seu).

@@ -11,7 +11,7 @@ export interface EventoPagamento {
   netValue?: number;
   splitCentavos?: number;
 }
-async function espelharCalendario(portas: Portas, a: Agendamento) {
+export async function espelharCalendario(portas: Portas, a: Agendamento) {
   try {
     const googleEventId = await portas.calendario.criarEvento(a);
     await portas.repositorio.atualizarAgendamento(a.id, { googleEventId });

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 220" role="img" aria-label="Ótica Lopes Vision — Muito além dos óculos">
+  <rect width="700" height="220" rx="20" fill="#061127" />
+  <g transform="translate(22 28) scale(2.5)" fill="none" stroke="#f6b51e">
+    <circle cx="24" cy="40" r="12.5" stroke-width="6" />
+    <path d="M13.2 50.8 L4.5 59.5" stroke-width="6" />
+    <path d="M21 25.2 L18.6 13.5" stroke-width="5" />
+    <path d="M34.6 29.4 L40.2 23.8" stroke-width="5" />
+    <circle cx="46" cy="18" r="7" stroke-width="5" />
+    <path d="M52.2 11.8 L58.5 5.5" stroke-width="5" />
+  </g>
+  <g fill="#f6b51e" font-family="Montserrat, 'Arial Black', Arial, sans-serif" font-weight="800">
+    <text x="200" y="70" font-size="24" letter-spacing="5">ÓTICA</text>
+    <text x="196" y="132" font-size="54">LOPES VISION</text>
+    <text x="232" y="172" font-size="19" font-weight="700" letter-spacing="3">MUITO ALÉM DOS ÓCULOS</text>
+    <rect x="150" y="186" width="56" height="7" rx="1" />
+    <rect x="610" y="150" width="56" height="7" rx="1" />
+  </g>
+</svg>

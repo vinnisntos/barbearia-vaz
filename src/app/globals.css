@@ -2,16 +2,16 @@
 
 @theme inline {
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
-  --font-titulo: var(--font-oswald), var(--font-geist-sans), system-ui, sans-serif;
+  --font-titulo: var(--font-montserrat), var(--font-geist-sans), system-ui, sans-serif;
 
-  --color-fundo: #12100e;
-  --color-superficie: #1c1917;
-  --color-relevo: #27221e;
-  --color-borda: #40382f;
-  --color-texto: #f5efe6;
-  --color-suave: #b9ae9f;
-  --color-ouro: #d9a94e;
-  --color-ouro-claro: #edc77c;
+  --color-fundo: #061127;
+  --color-superficie: #0b1b3a;
+  --color-relevo: #12284f;
+  --color-borda: #233d6e;
+  --color-texto: #f3f6fc;
+  --color-suave: #a7b6d2;
+  --color-amarelo: #f6b51e;
+  --color-amarelo-claro: #ffcf5c;
   --color-verde: #4ade80;
   --color-vermelho: #f87171;
   --color-perigo: #b3261e;
@@ -33,33 +33,27 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-ouro-claro);
+  outline: 2px solid var(--color-amarelo-claro);
   outline-offset: 2px;
 }
 
-/* Faixa do poste de barbeiro. */
-.faixa-barbeiro {
-  height: 6px;
-  background: repeating-linear-gradient(
-    135deg,
-    #c8372d 0 12px,
-    #f5efe6 12px 24px,
-    #2f5fa8 24px 36px,
-    #f5efe6 36px 48px
-  );
+/* Filete amarelo da marca no topo das páginas. */
+.faixa-marca {
+  height: 4px;
+  background: linear-gradient(90deg, #cf8f00, var(--color-amarelo-claro) 50%, #cf8f00);
 }
 
-/* Site institucional: fundo do hero, destaque da marca em ouro e selo girando. */
+/* Site institucional: fundo do hero, destaque da marca em amarelo e selo girando. */
 .hero {
   background:
-    radial-gradient(60rem 32rem at 85% 0%, rgb(217 169 78 / 0.16), transparent 60%),
-    radial-gradient(40rem 26rem at 0% 100%, rgb(200 55 45 / 0.1), transparent 65%),
-    repeating-linear-gradient(135deg, rgb(245 239 230 / 0.022) 0 2px, transparent 2px 22px),
+    radial-gradient(60rem 32rem at 85% 0%, rgb(246 181 30 / 0.13), transparent 60%),
+    radial-gradient(44rem 28rem at 0% 100%, rgb(46 104 214 / 0.22), transparent 65%),
+    repeating-linear-gradient(135deg, rgb(243 246 252 / 0.022) 0 2px, transparent 2px 22px),
     var(--color-fundo);
 }
 
 .hero-marca {
-  background: linear-gradient(175deg, #f6dca0 8%, var(--color-ouro) 48%, #9b7228 96%);
+  background: linear-gradient(175deg, #ffd978 8%, var(--color-amarelo) 55%, #dc9a06 96%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -68,7 +62,7 @@ body {
 }
 
 .hero-brilho {
-  background: radial-gradient(closest-side, rgb(217 169 78 / 0.2), transparent);
+  background: radial-gradient(closest-side, rgb(246 181 30 / 0.18), transparent);
 }
 
 .selo-gira {

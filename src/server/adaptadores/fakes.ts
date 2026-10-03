@@ -16,23 +16,9 @@ import { sobrepoe } from '../tempo';
 const servicosIniciais: Servico[] = [
   {
     id: '11111111-1111-4111-8111-111111111111',
-    nome: 'Corte',
-    precoCentavos: 4000,
+    nome: 'Exame de vista',
+    precoCentavos: 0,
     duracaoMinutos: 30,
-    ativo: true,
-  },
-  {
-    id: '22222222-2222-4222-8222-222222222222',
-    nome: 'Barba',
-    precoCentavos: 3000,
-    duracaoMinutos: 30,
-    ativo: true,
-  },
-  {
-    id: '33333333-3333-4333-8333-333333333333',
-    nome: 'Corte + Barba',
-    precoCentavos: 6000,
-    duracaoMinutos: 60,
     ativo: true,
   },
 ];

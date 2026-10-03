@@ -17,7 +17,7 @@ const NOME_STATUS: Record<StatusAgendamento, string> = {
 };
 
 const COR_STATUS: Record<StatusAgendamento, string> = {
-  pendente: "border-ouro/60 text-ouro-claro",
+  pendente: "border-amarelo/60 text-amarelo-claro",
   pago: "border-verde/60 text-verde",
   cancelado: "border-borda text-suave",
   ausente: "border-vermelho/60 text-vermelho",
@@ -108,12 +108,12 @@ export function Agenda({
         aoProximo={() => aoMudarDia(somarDias(dia, 1))}
       >
         {dia === hoje ? (
-          <p className="text-sm text-ouro-claro">Hoje</p>
+          <p className="text-sm text-amarelo-claro">Hoje</p>
         ) : (
           <button
             type="button"
             onClick={() => aoMudarDia(hoje)}
-            className="min-h-11 px-3 text-sm text-ouro-claro underline underline-offset-4"
+            className="min-h-11 px-3 text-sm text-amarelo-claro underline underline-offset-4"
           >
             Voltar para hoje
           </button>
@@ -150,7 +150,7 @@ export function Agenda({
                 <p className="mt-1 font-semibold break-words">{a.nomeCliente}</p>
                 <p className="text-sm break-words text-suave">{a.servicosResumo}</p>
                 <p className="mt-1 flex flex-wrap items-center gap-x-3 text-sm">
-                  <span className="font-semibold text-ouro-claro">
+                  <span className="font-semibold text-amarelo-claro">
                     {formatarReais(a.valorTotal)}
                   </span>
                   <span className="text-suave">{a.origem === "balcao" ? "Balcão" : "Pelo app"}</span>
@@ -159,7 +159,7 @@ export function Agenda({
                       href={`https://wa.me/55${soDigitos(a.telefoneCliente)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex min-h-11 items-center text-ouro-claro underline underline-offset-4"
+                      className="inline-flex min-h-11 items-center text-amarelo-claro underline underline-offset-4"
                     >
                       {mascararTelefone(a.telefoneCliente)}
                     </a>

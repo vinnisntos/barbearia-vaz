@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: { absolute: `${SITE.nome} — ${SITE.slogan}` },
-  description: `Corte e barba com ${SITE.barbeiro}. Agende seu horário pelo site, pague por Pix ou cartão e chegue só para sentar na cadeira.`,
+  description: `${SITE.slogan}. Agende seu horário na ${SITE.nome} pelo site${SITE.cobraPagamento ? ", pague por Pix ou cartão" : ", sem custo,"} e seja atendido sem espera.`,
 };
 
 export default async function PaginaInicial() {

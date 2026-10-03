@@ -2,9 +2,11 @@ import { randomInt } from 'node:crypto';
 import type { Agendamento, Portas, Relogio, Servico } from '../portas';
 import { erro, ErroNegocio } from '../erros';
 import { diaLocal, isoLocal, localParaDate, partes, reais, sobrepoe } from '../tempo';
+import { espelharCalendario } from './pagamentos';
 
 const alfabeto = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export const LIMITE_PENDENTES_POR_TELEFONE = 2;
+export const LIMITE_CONFIRMADOS_POR_TELEFONE = 3;
 export function gerarPin() {
   return Array.from({ length: 4 }, () => alfabeto[randomInt(alfabeto.length)]).join('');
 }
@@ -103,12 +105,62 @@ export async function validarReserva(portas: Portas, agora: Relogio, dados: Dado
     fim: new Date(inicio.getTime() + duracaoMinutos * 60000),
   };
 }
+/** Agendamento sem custo: nasce confirmado ("pago", valor zero), sem cobrança no Asaas. */
+async function agendarSemCobranca(
+  portas: Portas,
+  agora: Relogio,
+  dados: DadosReserva,
+  r: Awaited<ReturnType<typeof validarReserva>>,
+) {
+  const momento = agora().toISOString();
+  // Sem pagamento não há lock que expire: é o limite de horários futuros por telefone que impede
+  // um único visitante de ocupar a agenda inteira.
+  const futuros = await portas.repositorio.buscarPagoPorTelefone(dados.telefone, momento);
+  if (futuros.length >= LIMITE_CONFIRMADOS_POR_TELEFONE)
+    erro(
+      'MUITAS_RESERVAS',
+      429,
+      'Você já tem horários marcados neste número. Cancele um deles antes de marcar outro.',
+    );
+  const a = await portas.repositorio.criarAgendamento(
+    {
+      nomeCliente: dados.nome,
+      telefoneCliente: dados.telefone,
+      servicosIds: dados.servicosIds,
+      servicosResumo: r.servicos.map((s) => s.nome).join(' + '),
+      valorTotalCentavos: 0,
+      dataInicio: r.inicio.toISOString(),
+      dataFim: r.fim.toISOString(),
+      origem: 'app',
+      status: 'pago',
+      codigoCancelamento: gerarPin(),
+      expiraEm: null,
+      pagoEm: momento,
+      valorLiquidoCentavos: 0,
+    },
+    momento,
+  );
+  await espelharCalendario(portas, a);
+  return {
+    id: a.id,
+    valorTotal: 0,
+    dataInicio: isoLocal(new Date(a.dataInicio)),
+    dataFim: isoLocal(new Date(a.dataFim)),
+    expiraEm: null,
+    pagamento: null,
+  };
+}
 export async function criarAgendamento(
   portas: Portas,
   agora: Relogio,
-  dados: DadosReserva & { cpf: string; formaPagamento: 'PIX' | 'CARTAO' },
+  dados: DadosReserva & { cpf?: string; formaPagamento?: 'PIX' | 'CARTAO' },
+  cobrar = true,
 ) {
   const r = await validarReserva(portas, agora, dados);
+  if (!cobrar) return agendarSemCobranca(portas, agora, dados, r);
+  const { cpf, formaPagamento } = dados;
+  if (!cpf || !formaPagamento)
+    throw new ErroNegocio('DADOS_INVALIDOS', 400, 'Informe o CPF e a forma de pagamento.');
   // Sem isso, um único visitante travaria a agenda inteira criando reservas que nunca paga.
   const pendentes = await portas.repositorio.contarPendentes(dados.telefone, agora().toISOString());
   if (pendentes >= LIMITE_PENDENTES_POR_TELEFONE)
@@ -140,9 +192,9 @@ export async function criarAgendamento(
       agendamentoId: a.id,
       nome: dados.nome,
       telefone: dados.telefone,
-      cpf: dados.cpf,
+      cpf,
       valorCentavos: r.valorCentavos,
-      forma: dados.formaPagamento,
+      forma: formaPagamento,
     });
     await portas.repositorio.atualizarAgendamento(a.id, { asaasCobrancaId: cobranca.id });
     return {

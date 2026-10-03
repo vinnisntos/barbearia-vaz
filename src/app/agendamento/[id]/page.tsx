@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Checkout } from "@/components/Checkout";
 import { Cabecalho, Pagina } from "@/components/ui";
+import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Pagamento",
+  title: SITE.cobraPagamento ? "Pagamento" : "Seu agendamento",
   robots: { index: false },
 };
 

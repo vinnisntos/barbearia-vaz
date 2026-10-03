@@ -4,19 +4,24 @@ import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { api, paraErroApi, type CancelamentoFeito, type ErroApi } from "@/lib/api";
 import { formatarDataHora, formatarReais } from "@/lib/formato";
+import { SITE } from "@/lib/site";
 import { mascararPin, mascararTelefone, telefoneValido } from "@/lib/validacao";
 import { Aviso, Botao, Campo, Cartao, classesBotao, Modal, Titulo } from "./ui";
 
 function mensagemDeErro(erro: ErroApi): string {
   switch (erro.status) {
     case 404:
-      return "Não encontramos um horário pago e futuro com esse WhatsApp e PIN. Confira os dois e tente de novo.";
+      return SITE.cobraPagamento
+        ? "Não encontramos um horário pago e futuro com esse WhatsApp e PIN. Confira os dois e tente de novo."
+        : "Não encontramos um horário futuro com esse WhatsApp e PIN. Confira os dois e tente de novo.";
     case 422:
-      return "Faltam menos de 1 hora para o seu horário, então não é mais possível cancelar pelo site. O valor não é estornado.";
+      return SITE.cobraPagamento
+        ? "Faltam menos de 1 hora para o seu horário, então não é mais possível cancelar pelo site. O valor não é estornado."
+        : "Faltam menos de 1 hora para o seu horário, então não é mais possível cancelar pelo site. Fale com a ótica.";
     case 429:
       return "Muitas tentativas para este número. Por segurança, aguarde 1 hora antes de tentar de novo.";
     case 502:
-      return "Não conseguimos fazer o estorno agora, então seu horário continua marcado. Tente de novo em alguns minutos ou fale com a barbearia.";
+      return "Não conseguimos fazer o estorno agora, então seu horário continua marcado. Tente de novo em alguns minutos ou fale com a ótica.";
     default:
       return erro.message;
   }
@@ -66,14 +71,18 @@ export function CancelarForm() {
               Seu horário de{" "}
               <strong>{formatarDataHora(feito.dataInicio)}</strong> foi cancelado.
             </p>
-            <p className="text-sm text-suave">Valor estornado (70%)</p>
-            <p className="text-3xl font-semibold text-verde">
-              {formatarReais(feito.valorEstornado)}
-            </p>
-            <p className="text-sm leading-relaxed text-suave">
-              O estorno volta pelo mesmo meio de pagamento. No Pix costuma cair em
-              instantes; no cartão, depende da fatura.
-            </p>
+            {SITE.cobraPagamento && (
+              <>
+                <p className="text-sm text-suave">Valor estornado (70%)</p>
+                <p className="text-3xl font-semibold text-verde">
+                  {formatarReais(feito.valorEstornado)}
+                </p>
+                <p className="text-sm leading-relaxed text-suave">
+                  O estorno volta pelo mesmo meio de pagamento. No Pix costuma cair em
+                  instantes; no cartão, depende da fatura.
+                </p>
+              </>
+            )}
           </Cartao>
         </div>
         <Link href="/agendar" className={classesBotao("primario", "w-full")}>
@@ -88,16 +97,18 @@ export function CancelarForm() {
       <Titulo>Cancelar meu horário</Titulo>
 
       <Cartao>
-        <h2 className="font-semibold text-ouro-claro">Antes de cancelar</h2>
+        <h2 className="font-semibold text-amarelo-claro">Antes de cancelar</h2>
         <ul className="mt-2 list-inside list-disc text-sm leading-relaxed text-texto">
           <li>
             O cancelamento só é possível <strong>até 1 hora antes</strong> do horário
             marcado.
           </li>
-          <li>
-            O estorno é de <strong>70% do valor pago</strong>; os outros 30% ficam
-            retidos.
-          </li>
+          {SITE.cobraPagamento && (
+            <li>
+              O estorno é de <strong>70% do valor pago</strong>; os outros 30% ficam
+              retidos.
+            </li>
+          )}
           <li>Depois de confirmado, o cancelamento não pode ser desfeito.</li>
         </ul>
       </Cartao>
@@ -126,7 +137,11 @@ export function CancelarForm() {
           value={pin}
           onChange={(e) => setPin(mascararPin(e.target.value))}
           erro={validar ? erros.pin : null}
-          ajuda="É o código mostrado na tela de confirmação do pagamento."
+          ajuda={
+            SITE.cobraPagamento
+              ? "É o código mostrado na tela de confirmação do pagamento."
+              : "É o código mostrado na tela de confirmação do agendamento."
+          }
           className="font-mono tracking-[0.3em] uppercase placeholder:tracking-normal placeholder:normal-case"
           required
         />
@@ -144,8 +159,14 @@ export function CancelarForm() {
       {confirmando && (
         <Modal titulo="Confirmar cancelamento?" aoFechar={() => !enviando && setConfirmando(false)}>
           <p className="leading-relaxed text-suave">
-            Você recebe de volta <strong className="text-texto">70% do valor pago</strong>{" "}
-            e o horário é liberado. Isso não pode ser desfeito.
+            {SITE.cobraPagamento ? (
+              <>
+                Você recebe de volta <strong className="text-texto">70% do valor pago</strong>{" "}
+                e o horário é liberado. Isso não pode ser desfeito.
+              </>
+            ) : (
+              "O horário é liberado para outra pessoa. Isso não pode ser desfeito."
+            )}
           </p>
           <div className="flex flex-col gap-3">
             <Botao variante="perigo" ocupado={enviando} onClick={cancelar}>
