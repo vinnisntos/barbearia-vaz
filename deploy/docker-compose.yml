@@ -1,16 +1,18 @@
-# Servidor (EC2): fica em /var/www/barbearia-vaz/ junto com o .env.production.
+# Servidor (EC2): fica em /var/www/barberdemo/.
 #   docker compose pull && docker compose up -d      (NUNCA --build: a imagem vem do GitHub Actions)
-# O nginx do host faz proxy para 127.0.0.1:3003 — só loopback, a porta não fica exposta na internet.
+# O nginx do host faz proxy para 127.0.0.1:3004 — só loopback, a porta não fica exposta na internet.
 services:
   app:
-    image: ghcr.io/vinnisntos/barbearia-vaz:latest
+    image: ghcr.io/vinnisntos/barbearia-vaz:barberdemo
     ports:
-      - "127.0.0.1:3003:3000"
-    env_file:
-      - .env.production
+      - "127.0.0.1:3004:3000"
+    # Demo em memória: fakes no lugar de Supabase, Asaas e Google. Não há segredo nem .env aqui;
+    # os agendamentos de teste somem quando o container reinicia.
+    environment:
+      MODO_FAKE: "1"
     restart: unless-stopped
     # A instância tem ~900 MB para todos os projetos: o limite impede este app de derrubar os outros.
-    mem_limit: 320m
+    mem_limit: 256m
     logging:
       driver: json-file
       options:

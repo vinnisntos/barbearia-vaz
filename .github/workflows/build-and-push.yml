@@ -1,9 +1,10 @@
 name: build-and-push
 
-# Testa e publica a imagem em ghcr.io/vinnisntos/barbearia-vaz. A EC2 só faz pull dessa imagem.
+# Branch "barbearia": testa e publica a imagem ghcr.io/vinnisntos/barbearia-vaz:barberdemo (demo da
+# barbearia em barberdemo.vinnisantos.com.br). A EC2 só faz pull dessa imagem.
 on:
   push:
-    branches: [main]
+    branches: [barbearia]
   workflow_dispatch:
 
 permissions:
@@ -33,9 +34,11 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/vinnisntos/barbearia-vaz:latest
+            ghcr.io/vinnisntos/barbearia-vaz:barberdemo
             ghcr.io/vinnisntos/barbearia-vaz:${{ github.sha }}
+          # Demo em memória: login e pagamento fakes, sem Supabase nem Asaas.
           build-args: |
+            NEXT_PUBLIC_MODO_FAKE=1
             NEXT_PUBLIC_PAGAMENTO_FAKE=${{ vars.NEXT_PUBLIC_PAGAMENTO_FAKE }}
             NEXT_PUBLIC_SUPABASE_URL=${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
             NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}

@@ -10,14 +10,17 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # As NEXT_PUBLIC_* entram no bundle do navegador em tempo de build. Nenhuma é segredo.
-# NEXT_PUBLIC_MODO_FAKE (login fake) fica de fora de propósito. NEXT_PUBLIC_PAGAMENTO_FAKE=1 só mostra o
+# NEXT_PUBLIC_MODO_FAKE=1 (login fake: qualquer e-mail e senha entram no painel) só é passado pelo CI
+# desta branch, cuja demo roda inteira em memória (MODO_FAKE=1 no compose) — nunca use com banco real.
+# NEXT_PUBLIC_PAGAMENTO_FAKE=1 só mostra o
 # botão "Simular pagamento" do ambiente demonstrativo (Asaas sandbox); com o Asaas de produção a rota
 # por trás dele responde 404, então deixe a variável vazia no build de produção.
+ARG NEXT_PUBLIC_MODO_FAKE
 ARG NEXT_PUBLIC_PAGAMENTO_FAKE
 ARG NEXT_PUBLIC_SUPABASE_URL
 ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 ARG NEXT_PUBLIC_WHATSAPP_BARBEARIA
-ENV NEXT_PUBLIC_PAGAMENTO_FAKE=$NEXT_PUBLIC_PAGAMENTO_FAKE \
+ENV NEXT_PUBLIC_MODO_FAKE=$NEXT_PUBLIC_MODO_FAKE \n    NEXT_PUBLIC_PAGAMENTO_FAKE=$NEXT_PUBLIC_PAGAMENTO_FAKE \
     NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL \
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY \
     NEXT_PUBLIC_WHATSAPP_BARBEARIA=$NEXT_PUBLIC_WHATSAPP_BARBEARIA \
